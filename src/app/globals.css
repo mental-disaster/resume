@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  /* 스크롤바 숨기기 */
+  /* Chrome, Safari */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Firefox */
+  * {
+    scrollbar-width: none;
+  }
+  
+  /* IE and Edge */
+  * {
+    -ms-overflow-style: none;
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
