@@ -54,7 +54,7 @@ export default function Skills() {
               ref={el => setCardRefs(prev => [...prev, el])}
               initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
               animate={cardInViews[index] ? { opacity: 1, x: 0 } : { opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-              transition={{ duration: 0.5, delay: index * 0.2 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
               whileHover={{ scale: 1.05 }}
               className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all"
             >
