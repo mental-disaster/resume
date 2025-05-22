@@ -1,8 +1,6 @@
 "use client"
 
-import { motion } from 'framer-motion'
-import { useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { contactData } from '@/data/contact'
 
 export default function Contact() {
   return (
@@ -12,34 +10,33 @@ export default function Contact() {
         <div className="max-w-2xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <div className="text-center">
-              <h3 className="font-semibold mb-2">이메일</h3>
-              <a href="mailto:example@email.com" className="text-blue-600 hover:underline">
-                example@email.com
+              <h3 className="font-semibold mb-2">{contactData.email.label}</h3>
+              <a href={`mailto:${contactData.email.value}`} className="text-blue-600 hover:underline">
+                {contactData.email.value}
               </a>
             </div>
             <div className="text-center">
-              <h3 className="font-semibold mb-2">전화번호</h3>
-              <a href="tel:+821012345678" className="text-blue-600 hover:underline">
-                +82 10-1234-5678
+              <h3 className="font-semibold mb-2">{contactData.phone.label}</h3>
+              <a href={`tel:${contactData.phone.value}`} className="text-blue-600 hover:underline">
+                {contactData.phone.value}
               </a>
             </div>
           </div>
           <div className="flex justify-center space-x-6">
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" 
-               className="text-gray-600 hover:text-gray-900">
-              GitHub
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
-               className="text-gray-600 hover:text-gray-900">
-              LinkedIn
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"
-               className="text-gray-600 hover:text-gray-900">
-              Twitter
-            </a>
+            {contactData.social.map((social, index) => (
+              <a 
+                key={index}
+                href={social.url} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-gray-600 hover:text-gray-900"
+              >
+                {social.label}
+              </a>
+            ))}
           </div>
         </div>
       </div>
     </section>
   )
-} 
+}

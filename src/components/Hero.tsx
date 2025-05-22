@@ -2,10 +2,11 @@
 
 import Image from 'next/image'
 import { motion } from 'framer-motion'
+import { heroData } from '@/data/hero'
 
 export default function Hero() {
   return (
-    <section className="h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">
+    <section className="h-screen flex items-center justify-center bg-gradient-to-r from-primary to-success">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -19,7 +20,7 @@ export default function Hero() {
           className="relative w-32 h-32 mx-auto mb-8 rounded-full overflow-hidden border-4 border-white"
         >
           <Image
-            src="/images/profile.jpg"
+            src={heroData.profileImage}
             alt="Profile"
             fill
             className="object-cover"
@@ -31,7 +32,7 @@ export default function Hero() {
           transition={{ delay: 0.4 }}
           className="text-5xl font-bold mb-4"
         >
-          홍길동
+          {heroData.name}
         </motion.h1>
         <motion.h2 
           initial={{ opacity: 0 }}
@@ -39,7 +40,7 @@ export default function Hero() {
           transition={{ delay: 0.6 }}
           className="text-2xl mb-6"
         >
-          Full Stack Developer
+          {heroData.title}
         </motion.h2>
         <motion.p 
           initial={{ opacity: 0 }}
@@ -47,7 +48,7 @@ export default function Hero() {
           transition={{ delay: 0.8 }}
           className="text-xl mb-8"
         >
-          창의적인 문제 해결과 사용자 중심의 웹 개발을 추구합니다
+          {heroData.description}
         </motion.p>
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -55,10 +56,10 @@ export default function Hero() {
           transition={{ delay: 1 }}
           className="space-x-4"
         >
-          <a href="#contact" className="bg-white text-blue-600 px-6 py-3 rounded-full hover:bg-gray-100 transition">
+          <a href="#contact" className="bg-white text-primary px-6 py-3 rounded-full hover:bg-light transition">
             연락하기
           </a>
-          <a href="#projects" className="border-2 border-white px-6 py-3 rounded-full hover:bg-white hover:text-blue-600 transition">
+          <a href="#projects" className="border-2 border-white px-6 py-3 rounded-full hover:bg-white hover:text-primary transition">
             프로젝트 보기
           </a>
         </motion.div>
