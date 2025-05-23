@@ -1,27 +1,79 @@
-export interface SkillCategory {
-  icon: string;
-  items: string[];
+import { IconBrandDocker, IconBrandReact, IconDatabase, IconDeviceDesktop, IconInfinity, IconSettings, IconBrandTypescript, IconBrandGit, IconBrandPython, IconBrandGolang } from "@tabler/icons-react";
+import React from "react";
+
+export interface Skill {
+  category: string;
+  icon: React.ElementType;
+  tech: Technologies[];
 }
 
-export interface Skills {
-  [key: string]: SkillCategory;
+export interface Technologies {
+  icon?: React.ElementType;
+  name: string;
 }
 
-export const skills: Skills = {
-  frontend: {
-    icon: "🎨",
-    items: ["React", "Next.js", "TypeScript", "Tailwind CSS"]
+export const skills: Skill[] = [
+  {
+    category: "frontend",
+    icon: IconDeviceDesktop,
+    tech: [
+      {
+        icon: IconBrandTypescript,
+        name: "TypeScript"
+      },
+      {
+        icon: IconBrandReact,
+        name: "React"
+      },
+      {
+        name: "Thymeleaf"
+      }
+    ]
   },
-  backend: {
-    icon: "⚙️",
-    items: ["Node.js", "Express", "Python", "Django"]
+  {
+    category: "backend",
+    icon: IconSettings,
+    tech: [
+      {
+        icon: IconBrandPython,
+        name: "Python"
+      },
+      {
+        name: "Java"
+      },
+      {
+        icon: IconBrandGolang,
+        name: "Golang"
+      },
+      {
+        name: "Spring Boot"
+      },
+    ]
   },
-  database: {
-    icon: "🗄️",
-    items: ["MongoDB", "PostgreSQL", "Redis"]
+  {
+    category: "database",
+    icon: IconDatabase,
+    tech: [
+      {
+        name: "MariaDB"
+      },
+      {
+        name: "Oracle"
+      },
+    ]
   },
-  devops: {
-    icon: "🚀",
-    items: ["Docker", "AWS", "CI/CD", "Git"]
-  }
-}; 
+  {
+    category: "devops",
+    icon: IconInfinity,
+    tech: [
+      {
+        icon: IconBrandGit,
+        name: "Git"
+      },
+      {
+        icon: IconBrandDocker,
+        name: "Docker"
+      },
+    ]
+  },
+]; 

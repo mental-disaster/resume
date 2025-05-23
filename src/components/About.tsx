@@ -14,7 +14,7 @@ export default function About() {
       <div className="container mx-auto px-4">
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : undefined}
           transition={{ duration: 0.5 }}
           className="text-3xl font-bold text-center mb-12"
         >
@@ -27,7 +27,7 @@ export default function About() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="max-w-3xl mx-auto"
         >
-          <p className="text-gray-600 text-lg leading-relaxed mb-6">
+          <p className="text-gray text-lg leading-relaxed mb-6">
             {aboutData.description.map((paragraph, index) => (
               <span key={index}>
                 {paragraph}
@@ -36,26 +36,28 @@ export default function About() {
             ))}
           </p>
           <div className="grid grid-cols-2 gap-4 mt-8">
-            <motion.div 
+            <motion.a
+              href="#education"
               initial={{ opacity: 0, x: -20 }}
               animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className="bg-gray-50 p-4 rounded-lg"
+              className="bg-light/30 p-4 rounded-lg"
             >
               <h3 className="font-semibold mb-2">교육</h3>
-              <p className="text-gray-600">{aboutData.education.degree}</p>
-              <p className="text-gray-500 text-sm">{aboutData.education.school}, {aboutData.education.period}</p>
-            </motion.div>
-            <motion.div 
+              <p className="text-gray">{aboutData.education.degree}</p>
+              <p className="text-gray text-sm">{aboutData.education.school}, {aboutData.education.period}</p>
+            </motion.a>
+            <motion.a 
+              href="#experience"
               initial={{ opacity: 0, x: 20 }}
               animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className="bg-gray-50 p-4 rounded-lg"
+              className="bg-light/30 p-4 rounded-lg"
             >
               <h3 className="font-semibold mb-2">경력</h3>
-              <p className="text-gray-600">{aboutData.experience.position}</p>
-              <p className="text-gray-500 text-sm">{aboutData.experience.company}, {aboutData.experience.period}</p>
-            </motion.div>
+              <p className="text-gray">{aboutData.experience.position}</p>
+              <p className="text-gray text-sm">{aboutData.experience.company}, {aboutData.experience.period}</p>
+            </motion.a>
           </div>
         </motion.div>
       </div>

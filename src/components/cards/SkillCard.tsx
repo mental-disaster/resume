@@ -2,41 +2,43 @@
 
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
+import { Technologies } from '@/data/skills'
 
-interface SkillCardProps {
+interface Skill {
   category: string
-  data: {
-    icon: string
-    items: string[]
-  }
-  index: number
+  icon: React.ElementType
+  tech: Technologies[]
 }
 
-export function SkillCard({ category, data, index }: SkillCardProps) {
+export function SkillCard({ skill }: { skill: Skill }) {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, amount: 0.3 })
+  const isInView = useInView(ref, { once: true, amount: 0.3 })
+  const Icon = skill.icon
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-      animate={inView ? { opacity: 1, x: 0 } : undefined}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
-      className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+      initial={{ opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : undefined}
+      transition={{ duration: 0.6 }}
+      className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow"
     >
-      <div className="text-4xl mb-4">{data.icon}</div>
-      <h3 className="text-2xl font-bold mb-6 capitalize">{category}</h3>
+      <div className="flex items-center gap-3 mb-4">
+        <Icon className="w-6 h-6 text-primary" />
+        <h3 className="text-xl font-semibold">{skill.category}</h3>
+      </div>
       <div className="flex flex-wrap gap-3">
-        {data.items.map((skill) => (
+        {skill.tech.map((tech) => (
           <motion.span
-            key={skill}
+            key={tech.name}
             initial={{ opacity: 0, scale: 0 }}
-            animate={inView ? { opacity: 1, scale: 1 } : undefined}
+            animate={isInView ? { opacity: 1, scale: 1 } : undefined}
             transition={{ duration: 0.3 }}
-            className="bg-white px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all"
+            className="bg-white px-4 py-2 rounded-full text-xs font-medium shadow-sm hover:shadow-md transition-all flex items-center gap-1"
           >
-            {skill}
+            {tech.icon && <tech.icon className="w-4 h-4" />} {tech.name}
           </motion.span>
+
         ))}
       </div>
     </motion.div>

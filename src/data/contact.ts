@@ -1,5 +1,8 @@
+import { IconBrandGithub, IconBrandLinkedin, IconBrandX } from "@tabler/icons-react";
+
 export interface SocialLink {
   label: string;
+  icon?: React.ElementType;
   url: string;
 }
 
@@ -27,15 +30,18 @@ export const contactData: ContactInfo = {
   social: [
     {
       label: "GitHub",
+      icon: IconBrandGithub,
       url: "https://github.com"
     },
     {
       label: "LinkedIn",
+      icon: IconBrandLinkedin,
       url: "https://linkedin.com"
     },
     {
       label: "Twitter",
-      url: "https://twitter.com"
+      icon: IconBrandX,
+      url: "https://x.com"
     }
   ]
 };

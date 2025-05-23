@@ -16,7 +16,7 @@ export default function Projects() {
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : undefined}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
+          transition={{ duration: 0.6 }}
           className="text-4xl font-bold text-center mb-12 text-foreground"
         >
           프로젝트

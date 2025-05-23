@@ -1,44 +1,35 @@
 "use client"
 
-import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { useRef } from 'react'
 import { useInView } from 'framer-motion'
+import { IconBrandGithubFilled } from '@tabler/icons-react'
 
 interface Project {
   title: string
   description: string
-  image: string
   tech: string[]
   link: string
 }
 
 export const ProjectCard = ({ project }: { project: Project }) => {
   const ref = useRef(null)
-  const isInView = useInView(ref, { amount: 0.3 })
+  const isInView = useInView(ref, { once: true, amount: 0.1 })
   
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 40 }}
       animate={isInView ? { opacity: 1, y: 0 } : undefined}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
+      transition={{ duration: 0.6 }}
       className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
     >
-      <div className="relative h-48">
-        <Image
-          src={project.image}
-          alt={project.title}
-          fill
-          className="object-cover"
-        />
-      </div>
       <div className="p-6">
         <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
         <p className="mb-4">{project.description}</p>
         <div className="flex flex-wrap gap-2 mb-4">
           {project.tech.map((tech, i) => (
-            <span key={i} className="px-3 py-1 rounded-full text-sm">
+            <span key={i} className="bg-white px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all">
               {tech}
             </span>
           ))}
@@ -49,10 +40,9 @@ export const ProjectCard = ({ project }: { project: Project }) => {
           rel="noopener noreferrer"
           className="hover:underline inline-flex items-center"
         >
-          GitHub 보기
-          <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-          </svg>
+          <div className="ml-2 inline-flex items-center justify-center w-6 h-6 bg-black rounded-full">
+            <IconBrandGithubFilled className="w-4 h-4 text-white" />
+          </div>
         </a>
       </div>
     </motion.div>
