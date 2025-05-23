@@ -22,7 +22,7 @@ export const ExperienceCard = ({ exp }: { exp: Experience }) => {
       <div className="absolute rounded-xl inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 flex items-center justify-center">
         <Image 
           src={"/images/tedious_and_pedantic.png"} 
-          alt={'지루하고 현학적임임'} 
+          alt={'지루하고 현학적임'} 
           fill
           className='opacity-20'
         />
