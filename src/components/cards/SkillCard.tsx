@@ -2,13 +2,7 @@
 
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { Technologies } from '@/data/skills'
-
-interface Skill {
-  category: string
-  icon: React.ElementType
-  tech: Technologies[]
-}
+import { Skill } from '@/data/skills'
 
 export function SkillCard({ skill }: { skill: Skill }) {
   const ref = useRef(null)

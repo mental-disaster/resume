@@ -1,6 +1,6 @@
 import { IconBooks, IconFlask, IconSchool } from '@tabler/icons-react'
 
-interface Education {
+export interface Education {
   icon: React.ElementType
   institution: string
   activity: string

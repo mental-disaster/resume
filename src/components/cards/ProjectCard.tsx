@@ -4,13 +4,8 @@ import { motion } from 'framer-motion'
 import { useRef } from 'react'
 import { useInView } from 'framer-motion'
 import { IconBrandGithubFilled } from '@tabler/icons-react'
+import { Project } from '@/data/projects'
 
-interface Project {
-  title: string
-  description: string
-  tech: string[]
-  link: string
-}
 
 export const ProjectCard = ({ project }: { project: Project }) => {
   const ref = useRef(null)
