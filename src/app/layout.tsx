@@ -4,7 +4,7 @@ import "./globals.css";
 import { ReactLenis } from "lenis/react";
 
 export const metadata: Metadata = {
-  title: "HELLO",
+  title: "HELLO I'M LIM GYEONGHUN",
   description: "Who is Lim Gyeonghun?",
 };
 
