@@ -6,12 +6,12 @@ import { Achievement } from '@/data/achievements'
 import Image from 'next/image'
 
 export const AchievementCard = ({ achievement }: { achievement: Achievement }) => {
-    const ref = useRef(null)
-    const isInView = useInView(ref, { once: true, amount: 0.3 })
-    const Icon = achievement.icon
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, amount: 0.3 })
+  const Icon = achievement.icon
 
-  return (
-    <motion.div
+  const CardContent = (
+      <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 20 }}
       animate={isInView ? { opacity: 1, y: 0 } : undefined}
@@ -39,5 +39,13 @@ export const AchievementCard = ({ achievement }: { achievement: Achievement }) =
         <p className="text-gray text-xs">{achievement.date}</p>
       </div>
     </motion.div>
+  )
+
+  return achievement.link ? (
+    <a href={achievement.link} target="_blank" rel="noopener noreferrer">
+      {CardContent}
+    </a>
+  ) : (
+    CardContent
   )
 }

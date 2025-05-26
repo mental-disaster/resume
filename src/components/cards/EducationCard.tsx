@@ -9,7 +9,7 @@ export const EducationCard = ({ education }: { education: Education }) => {
   const isInView = useInView(ref, { once: true, amount: 0.3 })
   const Icon = education.icon
 
-  return (
+  const CardContent = (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 20 }}
@@ -24,5 +24,13 @@ export const EducationCard = ({ education }: { education: Education }) => {
       <p className="text-gray text-sm mb-1">{education.activity}</p>
       <p className="text-gray text-xs">{education.period}</p>
     </motion.div>
+  )
+
+  return education.link ? (
+    <a href={education.link} target="_blank" rel="noopener noreferrer">
+      {CardContent}
+    </a>
+  ) : (
+    CardContent
   )
 }

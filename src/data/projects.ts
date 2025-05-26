@@ -1,39 +1,103 @@
 export interface Project {
     title: string;
     description: string;
+    role: string;
+    team?: string;
+    startedAt: string;
+    endedAt?: string;
     tech: string[];
-    link: string;
+    details?: string[];
+    link?: string;
   }
   
   export const projects: Project[] = [
     {
-      title: "이커머스 플랫폼",
-      description: "Next.js와 Node.js를 활용한 대규모 이커머스 플랫폼 개발",
-      tech: ["Next.js", "Node.js", "MongoDB", "AWS"],
-      link: "https://github.com/yourusername/ecommerce"
+      title: "국민권익위원회 청렴포털 시스템 유지관리 및 위탁운영",
+      description: "요약",
+      role: "유지보수 및 운영",
+      team: "프람트테크놀로지",
+      tech: ["Spring framework", "Cubrid"],
+      startedAt: "2024.07",
+      details: [
+        "대민 및 내부 업무 시스템 운영 및 기능 유지보수",
+        "사용자 요청사항 분석 및 개선사항 반영",
+        "시스템 개선점 분석 및 쿼리 튜닝, 코드 개선 등 시스템 고도화",
+      ],
     },
     {
-      title: "실시간 채팅 앱",
-      description: "Socket.io를 활용한 실시간 채팅 애플리케이션",
-      tech: ["React", "Socket.io", "Express", "Redis"],
-      link: "https://github.com/yourusername/chat-app"
+      title: "외교부 재외공관 클라우드 기반 해외정보 범정부 활용체계 구축 3차",
+      description: "요약",
+      role: "API 분석 및 개발",
+      team: "프람트테크놀로지",
+      tech: ["Python"],
+      startedAt: "2024.07",
+      endedAt: "2024.12",
+      details: [
+        "기존 Open API 개선점 분석 및 리팩토링",
+        "신규 개방 대상 API 정의 및 개발 수행",
+      ],
     },
     {
-      title: "실시간 채팅 앱",
-      description: "Socket.io를 활용한 실시간 채팅 애플리케이션",
-      tech: ["React", "Socket.io", "Express", "Redis"],
-      link: "https://github.com/yourusername/chat-app"
+      title: "법제처 개방체계 구축 지원",
+      description: "요약",
+      role: "데이터 전처리 자동화",
+      team: "프람트테크놀로지",
+      tech: ["Spring Boot", "Docker", "Cubrid"],
+      startedAt: "2024.11",
+      endedAt: "2024.11",
+      details: [
+        "문서 내 텍스트 추출 자동화 작업",
+        "이미지 기반 PDF 대상 OCR 전처리 수행",
+      ],
     },
     {
-      title: "실시간 채팅 앱",
-      description: "Socket.io를 활용한 실시간 채팅 애플리케이션",
-      tech: ["React", "Socket.io", "Express", "Redis"],
-      link: "https://github.com/yourusername/chat-app"
+      title: "API Gateway 개발",
+      description: "요약",
+      role: "API Gateway 서버 및 관리 웹 개발",
+      team: "프람트테크놀로지",
+      tech: ["Golang", "React", "MariaDB"],
+      startedAt: "2024.03",
+      endedAt: "2024.08",
+      details: [
+        "API Gateway 관리자 서버(Golang) 및 관리 UI(React) 개발",
+        "TDD 기반 개발",
+      ],
     },
     {
-      title: "실시간 채팅 앱",
-      description: "Socket.io를 활용한 실시간 채팅 애플리케이션",
-      tech: ["React", "Socket.io", "Express", "Redis"],
-      link: "https://github.com/yourusername/chat-app"
+      title: "국토교통부 사업용차량 이력정보 개방체계 구축",
+      description: "요약",
+      role: "풀스택 개발",
+      team: "프람트테크놀로지",
+      tech: ["Spring Boot", "Thymeleaf", "Tibero"],
+      startedAt: "2024.01",
+      endedAt: "2024.03",
+      details: [
+        "사용자 페이지 및 관리자 시스템 풀스택 개발",
+      ],
+    },
+    {
+      title: "행정안전부 재난배상책임보험 정보 개방사업",
+      description: "요약",
+      role: "API 개발 및 PL",
+      team: "프람트테크놀로지",
+      tech: ["Spring Boot", "MariaDB", "Tibero"],
+      startedAt: "2023.07",
+      endedAt: "2024.01",
+      details: [
+        "개방 API 및 관리 시스템 개발",
+        "PL 중도 퇴사로 개발 리딩 및 일정 조율 업무 수행",
+      ],
+    },
+    {
+      title: "여성가족부 아이돌봄 통합지원 플랫폼 구축사업 1단계",
+      description: "요약",
+      role: "풀스택 개발",
+      team: "프람트테크놀로지",
+      tech: ["Spring Boot", "Thymeleaf", "Bootstrap", "Tibero"],
+      startedAt: "2022.04",
+      endedAt: "2023.06",
+      details: [
+        "사용자 포털 및 내부 업무 시스템 풀스택 개발",
+      ],
     }
   ];

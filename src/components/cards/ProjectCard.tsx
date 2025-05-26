@@ -29,16 +29,18 @@ export const ProjectCard = ({ project }: { project: Project }) => {
             </span>
           ))}
         </div>
-        <a 
-          href={project.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:underline inline-flex items-center"
+        {project.link && (
+          <a 
+            href={project.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline inline-flex items-center"
         >
           <div className="ml-2 inline-flex items-center justify-center w-6 h-6 bg-black rounded-full">
             <IconBrandGithubFilled className="w-4 h-4 text-white" />
           </div>
         </a>
+        )}
       </div>
     </motion.div>
   )

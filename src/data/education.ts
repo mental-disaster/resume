@@ -5,6 +5,7 @@ export interface Education {
   institution: string
   activity: string
   period: string
+  link?: string
 }
 
 export const education = [
