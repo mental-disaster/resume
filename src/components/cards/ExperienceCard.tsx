@@ -8,7 +8,7 @@ import Image from 'next/image'
 import { ExperienceModal } from '@/components/modals/ExperienceModal'
 import { PrimaryBadge } from '@/components/badges/PrimaryBadge'
 import { SuccessBadge } from '@/components/badges/SuccessBadge'
-import { utils } from '@/components/common/Utils'
+import { Utils } from '@/components/common/Utils'
 
 export const ExperienceCard = ({ exp }: { exp: Experience }) => {
   const ref = useRef(null)
@@ -48,7 +48,7 @@ export const ExperienceCard = ({ exp }: { exp: Experience }) => {
           <h3 className="text-2xl font-bold mb-2 flex items-center">
             {exp.company}
             {exp.endedAt ?  '' : <PrimaryBadge className="ml-1" label={'재직중'} />}
-            <SuccessBadge className="ml-1" label={utils.formatDuration(exp.startedAt, exp.endedAt)} />
+            <SuccessBadge className="ml-1 text-dark" label={Utils.formatDuration(exp.startedAt, exp.endedAt)} />
           </h3>
           <p className="text-dark text-lg font-semibold mb-2">{exp.position}</p>
           <p className="text-gray/50 mb-4">{exp.startedAt} - {exp.endedAt ? exp.endedAt : '현재'}</p>

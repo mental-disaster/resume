@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-export const ShadowBadge = ({
+export const WarningBadge = ({
   label,
   className,
 }: {
@@ -10,8 +10,8 @@ export const ShadowBadge = ({
   return (
     <span
       className={clsx(
-        'inline-block px-1 py-0.5 rounded-md text-sm text-white bg-gray/80',
-        className,
+        'inline-block px-2 py-0.5 rounded-md text-sm text-white bg-gradient-to-r from-warning/80 via-warning to-warning/80',
+        className
       )}
     >
       {label}
