@@ -13,7 +13,7 @@ export interface Project {
   export const projects: Project[] = [
     {
       title: "국민권익위원회 청렴포털 시스템 유지관리 및 위탁운영",
-      description: "요약",
+      description: "국민권인위원회 청렴포털 대국민, 업무 시스템 유지보수 및 운영",
       role: "유지보수 및 운영",
       team: "프람트테크놀로지",
       tech: ["Spring framework", "Cubrid"],
@@ -26,8 +26,8 @@ export interface Project {
     },
     {
       title: "외교부 재외공관 클라우드 기반 해외정보 범정부 활용체계 구축 3차",
-      description: "요약",
-      role: "API 분석 및 개발",
+      description: "외교부 기존, 신규 API 개선 및 개발",
+      role: "컨설팅 및 백엔드 개발",
       team: "프람트테크놀로지",
       tech: ["Python"],
       startedAt: "2024.07",
@@ -39,8 +39,8 @@ export interface Project {
     },
     {
       title: "법제처 개방체계 구축 지원",
-      description: "요약",
-      role: "데이터 전처리 자동화",
+      description: "텍스트, 이미지의 법령 정보 추출 자동화",
+      role: "데이터 처리 자동화",
       team: "프람트테크놀로지",
       tech: ["Spring Boot", "Docker", "Cubrid"],
       startedAt: "2024.11",
@@ -52,8 +52,8 @@ export interface Project {
     },
     {
       title: "API Gateway 개발",
-      description: "요약",
-      role: "API Gateway 서버 및 관리 웹 개발",
+      description: "API Gateway 관리 시스템 서버 및 웹페이지 개발",
+      role: "풀스택 개발",
       team: "프람트테크놀로지",
       tech: ["Golang", "React", "MariaDB"],
       startedAt: "2024.03",
@@ -65,7 +65,7 @@ export interface Project {
     },
     {
       title: "국토교통부 사업용차량 이력정보 개방체계 구축",
-      description: "요약",
+      description: "사용자 및 관리자 페이지 개발",
       role: "풀스택 개발",
       team: "프람트테크놀로지",
       tech: ["Spring Boot", "Thymeleaf", "Tibero"],
@@ -77,8 +77,8 @@ export interface Project {
     },
     {
       title: "행정안전부 재난배상책임보험 정보 개방사업",
-      description: "요약",
-      role: "API 개발 및 PL",
+      description: "신규 API 개발",
+      role: "백엔드 개발 및 개발 리딩",
       team: "프람트테크놀로지",
       tech: ["Spring Boot", "MariaDB", "Tibero"],
       startedAt: "2023.07",
@@ -90,7 +90,7 @@ export interface Project {
     },
     {
       title: "여성가족부 아이돌봄 통합지원 플랫폼 구축사업 1단계",
-      description: "요약",
+      description: "아이돌봄 포털 대국민, 업무 시스템 개발",
       role: "풀스택 개발",
       team: "프람트테크놀로지",
       tech: ["Spring Boot", "Thymeleaf", "Bootstrap", "Tibero"],
@@ -98,6 +98,7 @@ export interface Project {
       endedAt: "2023.06",
       details: [
         "사용자 포털 및 내부 업무 시스템 풀스택 개발",
+        "돌보미 페이지 및 기관, 원장 페이지 개발"
       ],
     }
   ];

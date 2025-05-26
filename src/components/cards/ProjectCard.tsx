@@ -20,9 +20,10 @@ export const ProjectCard = ({ project }: { project: Project }) => {
       className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
     >
       <div className="p-6">
-        <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-        <p className="mb-4">{project.description}</p>
-        <div className="flex flex-wrap gap-2 mb-4">
+        <h3 className="text-xl font-semibold">{project.title}</h3>
+        <p className="mt-1 text-gray/50">{project.team}({project.role})</p>
+        <p className="mt-2">{project.description}</p>
+        <div className="flex flex-wrap gap-2 mt-4">
           {project.tech.map((tech, i) => (
             <span key={i} className="bg-white px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all">
               {tech}
@@ -34,7 +35,7 @@ export const ProjectCard = ({ project }: { project: Project }) => {
             href={project.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:underline inline-flex items-center"
+            className="hover:underline inline-flex items-center mt-4"
         >
           <div className="ml-2 inline-flex items-center justify-center w-6 h-6 bg-black rounded-full">
             <IconBrandGithubFilled className="w-4 h-4 text-white" />

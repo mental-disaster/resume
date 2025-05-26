@@ -5,7 +5,6 @@ import { useRef } from 'react'
 import { useInView } from 'framer-motion'
 import { experience } from '@/data/experience'
 import { ExperienceCard } from '@/components/cards/ExperienceCard'
-import { WarningBadge } from './badges/WarningBadge'
 import { Utils } from '@/components/common/Utils'
 import { ShadowBadge } from './badges/ShadowBadge'
 
