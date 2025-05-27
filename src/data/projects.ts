@@ -39,7 +39,7 @@ export interface Project {
     },
     {
       title: "법제처 개방체계 구축 지원",
-      description: "텍스트, 이미지의 법령 정보 추출 자동화",
+      description: "PDF, hwp파일 등 텍스트, 이미지의 법령 정보 추출 자동화",
       role: "데이터 처리 자동화",
       team: "프람트테크놀로지",
       tech: ["Spring Boot", "Docker", "Cubrid"],
@@ -55,12 +55,13 @@ export interface Project {
       description: "API Gateway 관리 시스템 서버 및 웹페이지 개발",
       role: "풀스택 개발",
       team: "프람트테크놀로지",
-      tech: ["Golang", "React", "MariaDB"],
+      tech: ["Golang", "TypeScript", "React", "MariaDB"],
       startedAt: "2024.03",
       endedAt: "2024.08",
       details: [
         "API Gateway 관리자 서버(Golang) 및 관리 UI(React) 개발",
-        "TDD 기반 개발",
+        "사용자관리, API 관리, 인증키 관리 등 관리 기능 개발",
+        "TDD 및 코드리뷰 진행",
       ],
     },
     {
@@ -80,7 +81,7 @@ export interface Project {
       description: "신규 API 개발",
       role: "백엔드 개발 및 개발 리딩",
       team: "프람트테크놀로지",
-      tech: ["Spring Boot", "MariaDB", "Tibero"],
+      tech: ["Spring Boot", "MariaDB", "Tibero", "Docker"],
       startedAt: "2023.07",
       endedAt: "2024.01",
       details: [
@@ -98,7 +99,7 @@ export interface Project {
       endedAt: "2023.06",
       details: [
         "사용자 포털 및 내부 업무 시스템 풀스택 개발",
-        "돌보미 페이지 및 기관, 원장 페이지 개발"
+        "돌보미 페이지 및 업무포털 개발"
       ],
     }
   ];

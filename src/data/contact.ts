@@ -31,17 +31,7 @@ export const contactData: ContactInfo = {
     {
       label: "GitHub",
       icon: IconBrandGithub,
-      url: "https://github.com"
+      url: "https://github.com/mental-disaster"
     },
-    {
-      label: "LinkedIn",
-      icon: IconBrandLinkedin,
-      url: "https://linkedin.com"
-    },
-    {
-      label: "Twitter",
-      icon: IconBrandX,
-      url: "https://x.com"
-    }
   ]
 };
