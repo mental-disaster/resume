@@ -1,4 +1,4 @@
-import { IconBrandGithub, IconBrandLinkedin, IconBrandX } from "@tabler/icons-react";
+import { IconBrandGithub } from "@tabler/icons-react";
 
 export interface SocialLink {
   label: string;
