@@ -62,7 +62,7 @@ export const skills: Skill[] = [
         name: "MariaDB"
       },
       {
-        name: "Oracle"
+        name: "Tibero"
       },
     ]
   },
