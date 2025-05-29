@@ -1,5 +1,5 @@
 import { Experience } from "@/data/experience";
-import { IconX, IconChevronRight } from "@tabler/icons-react";
+import { IconX } from "@tabler/icons-react";
 import { PrimaryBadge } from "@/components/badges/PrimaryBadge";
 import { ShadowBadge } from "@/components/badges/ShadowBadge";
 import { SuccessBadge } from "@/components/badges/SuccessBadge";
