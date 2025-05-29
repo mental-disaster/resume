@@ -29,7 +29,7 @@ export interface Project {
       description: "외교부 기존, 신규 API 개선 및 개발",
       role: "컨설팅 및 백엔드 개발",
       team: "프람트테크놀로지",
-      tech: ["Python"],
+      tech: ["Spring Boot", "Docker", "Cubrid"],
       startedAt: "2024.07",
       endedAt: "2024.12",
       details: [
@@ -42,7 +42,7 @@ export interface Project {
       description: "PDF, hwp파일 등 텍스트, 이미지의 법령 정보 추출 자동화",
       role: "데이터 처리 자동화",
       team: "프람트테크놀로지",
-      tech: ["Spring Boot", "Docker", "Cubrid"],
+      tech: ["Python"],
       startedAt: "2024.11",
       endedAt: "2024.11",
       details: [
