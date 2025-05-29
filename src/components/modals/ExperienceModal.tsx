@@ -1,5 +1,5 @@
 import { Experience } from "@/data/experience";
-import { IconX } from "@tabler/icons-react";
+import { IconX, IconChevronRight } from "@tabler/icons-react";
 import { PrimaryBadge } from "@/components/badges/PrimaryBadge";
 import { ShadowBadge } from "@/components/badges/ShadowBadge";
 import { SuccessBadge } from "@/components/badges/SuccessBadge";
@@ -15,10 +15,10 @@ export const ExperienceModal = ({ exp, onClose }: { exp: Experience; onClose: ()
   return (
     <div 
       onClick={handleBackgroundClick} 
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
     >
-      <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] flex flex-col">
-        <div className="flex justify-between items-center px-6 py-4 border-b">
+      <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full">
+        <div className="flex justify-between items-center px-6 py-4">
           <h2 className="text-xl font-bold">{exp.company}</h2>
           <button 
             onClick={onClose} 
@@ -28,7 +28,7 @@ export const ExperienceModal = ({ exp, onClose }: { exp: Experience; onClose: ()
           </button> 
         </div>
 
-        <div className="px-6 pb-6 overflow-y-auto">
+        <div className="px-6 pb-6">
           <p className="text-dark text-lg font-semibold mb-2 flex items-center">
             {exp.position}
             {exp.endedAt ?  '' : <PrimaryBadge className="ml-1" label={'재직중'} />}
@@ -49,7 +49,7 @@ export const ExperienceModal = ({ exp, onClose }: { exp: Experience; onClose: ()
               {exp.details.map((detail, idx) => (
                 <li key={idx} className="flex items-start group">
                   <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0 group-hover:scale-125 transition-transform"></div>
-                  <p className="ml-3 leading-relaxed break-words text-gray">{detail}</p>
+                  <p className="ml-3 leading-relaxed break-words text-gray-600">{detail}</p>
                 </li>
               ))}
             </ul>
