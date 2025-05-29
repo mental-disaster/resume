@@ -47,7 +47,7 @@ export const ProjectCard = ({ project }: { project: Project }) => {
         <div className="absolute left-0 right-0 bg-white px-6 pb-6 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all shadow-sm group-hover:shadow-md rounded-b-lg z-10" >
           <ul className="list-disc list-inside space-y-2">
             {project.details.map((detail, i) => (
-              <li key={i} className="text-sm text-gray">
+              <li key={i} className="text-sm text-gray leading-relaxed break-words">
                 {detail}
               </li>
             ))}

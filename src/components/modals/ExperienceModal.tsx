@@ -61,11 +61,10 @@ export const ExperienceModal = ({ exp, onClose }: { exp: Experience; onClose: ()
 
           <div className="mt-6">
             <h3 className="text-lg font-semibold mb-3">주요 업무</h3>
-            <ul className="space-y-3">
+            <ul className="list-disc space-y-3 pl-4">
               {exp.details.map((detail, idx) => (
-                <li key={idx} className="flex items-start group">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0 group-hover:scale-125 transition-transform"></div>
-                  <p className="ml-3 leading-relaxed break-words text-gray-600">{detail}</p>
+                <li key={idx}>
+                  <p className="leading-relaxed break-words text-gray">{detail}</p>
                 </li>
               ))}
             </ul>
