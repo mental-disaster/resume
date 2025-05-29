@@ -41,19 +41,19 @@
 
 @font-face {
   font-family: 'GCT';
-  src: url('/fonts/GCT_Light.ttf') format('truetype');
+  src: url('/fonts/GCT_Light.woff') format('woff');
   font-weight: normal, 300;
   font-style: normal;
 }
 @font-face {
   font-family: 'GCT';
-  src: url('/fonts/GCT_Medium.ttf') format('truetype');
+  src: url('/fonts/GCT_Medium.woff') format('woff');
   font-weight: 500;
   font-style: normal;
 }
 @font-face {
   font-family: 'GCT';
-  src: url('/fonts/GCT_Bold.ttf') format('truetype');
+  src: url('/fonts/GCT_Bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
 }
