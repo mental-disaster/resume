@@ -20,11 +20,11 @@ export const ProjectCard = ({ project }: { project: Project }) => {
     >
       <div className="p-6">
         <h3 className="text-xl font-semibold">{project.title}</h3>
-        <p className="mt-1 text-gray/50">{project.team}({project.role})</p>
-        <p className="mt-2">{project.description}</p>
+        <p className="mt-1 text-gray/50">{project.startedAt} - {project.endedAt ? project.endedAt : '현재'}</p>
+        <p className="mt-2 text-sm text-gray">{project.description}</p>
         <div className="flex flex-wrap gap-2 mt-4">
           {project.tech.map((tech, i) => (
-            <span key={i} className="bg-white px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all">
+            <span key={i} className="bg-white px-2 py-1 rounded-full text-sm shadow-sm hover:shadow-md transition-all">
               {tech}
             </span>
           ))}
@@ -47,7 +47,7 @@ export const ProjectCard = ({ project }: { project: Project }) => {
         <div className="absolute left-0 right-0 bg-white px-6 pb-6 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all shadow-sm group-hover:shadow-md rounded-b-lg z-10" >
           <ul className="list-disc list-inside space-y-2">
             {project.details.map((detail, i) => (
-              <li key={i} className="text-sm text-gray leading-relaxed break-words">
+              <li key={i} className="leading-relaxed break-words">
                 {detail}
               </li>
             ))}
