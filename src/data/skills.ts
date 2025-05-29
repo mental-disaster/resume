@@ -46,10 +46,6 @@ export const skills: Skill[] = [
         name: "Java"
       },
       {
-        icon: IconBrandGolang,
-        name: "Golang"
-      },
-      {
         name: "Spring Boot"
       },
     ]
