@@ -1,4 +1,4 @@
-import { IconBrandDocker, IconBrandReact, IconDatabase, IconDeviceDesktop, IconInfinity, IconSettings, IconBrandTypescript, IconBrandGit, IconBrandPython, IconHtml } from "@tabler/icons-react";
+import { IconBrandDocker, IconBrandReact, IconDatabase, IconDeviceDesktop, IconInfinity, IconSettings, IconBrandTypescript, IconBrandGit, IconBrandPython, IconBrandGolang, IconHtml } from "@tabler/icons-react";
 import React from "react";
 
 export interface Skill {
