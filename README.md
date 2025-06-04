@@ -41,10 +41,10 @@ npm run start
 
 ```
 resume-tailwind/
-├── app/          # Next.js 앱 디렉토리
 ├── src/          # 소스 코드
+│   ├── app/          # Next.js 앱 디렉토리
 │   ├── components/   # React 컴포넌트
-│   └── data/     # 데이터 파일
+│   └── data/         # 데이터 파일
 └── public/       # 정적 파일
 ```
 
