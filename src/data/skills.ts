@@ -37,9 +37,6 @@ export const skills: Skill[] = [
         name: 'React',
       },
       {
-        name: 'Thymeleaf',
-      },
-      {
         icon: IconHtml,
         name: 'HTML/CSS',
       },
