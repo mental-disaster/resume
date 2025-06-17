@@ -1,38 +1,72 @@
-So is this zelda?: https://resume-tailwind-wheat.vercel.app/
+# Resume Tailwind
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+이 프로젝트는 Next.js와 Tailwind CSS를 사용하여 구축된 이력서입니다.
 
-## Getting Started
+## 기술 스택
 
-First, run the development server:
+- **프레임워크**: Next.js 15.3.2
+- **언어**: TypeScript
+- **스타일링**: Tailwind CSS
+
+## 시작하기
+
+### 필수 조건
+
+- Node.js (22 버전 권장)
+- npm
+
+### 설치
+
+```bash
+# 의존성 설치
+npm install
+```
+
+### 개발 서버 실행
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+개발 서버는 [http://localhost:3000](http://localhost:3000)에서 실행됩니다.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 프로덕션 빌드
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+## 프로젝트 구조
 
-To learn more about Next.js, take a look at the following resources:
+```
+resume-tailwind/
+├── src/          # 소스 코드
+│   ├── app/          # Next.js 앱 디렉토리
+│   ├── components/   # React 컴포넌트
+│   └── data/         # 데이터 파일
+└── public/       # 정적 파일
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 주의사항
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Next.js 15.3.2 버전을 사용하고 있으며, Turbopack을 개발 서버에 적용했습니다.
+- React 19를 사용하고 있어 최신 기능들을 활용할 수 있습니다.
+- TypeScript를 사용하여 타입 안정성을 보장합니다.
 
-## Deploy on Vercel
+## 배포
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+이 프로젝트는 Vercel에 배포되어 있으며, 다음 링크에서 확인하실 수 있습니다:
+[이력서 웹사이트](https://resume-tailwind-wheat.vercel.app/)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 배포 방법
+
+1. GitHub 저장소를 Vercel에 연결
+2. 자동 배포 설정
+3. 환경 변수 설정 (필요한 경우)
+
+### 배포 환경
+
+- **호스팅**: Vercel
+- **도메인**: resume-tailwind-wheat.vercel.app
+- **배포 상태**: 프로덕션

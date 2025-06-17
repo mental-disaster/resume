@@ -21,7 +21,7 @@ export default function Projects() {
         >
           프로젝트
         </motion.h2>
-        <div ref={ref} className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div ref={ref} className="grid gap-8 md:grid-cols-2">
           {projects.map((project, index) => (
             <ProjectCard key={index} project={project} />
           ))}

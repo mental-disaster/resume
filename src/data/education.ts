@@ -12,7 +12,7 @@ export const education = [
   {
     icon: IconSchool,
     institution: '인천대학교 컴퓨터공학부',
-    activity: '학사',
+    activity: '학사(3.74/4.5 - 졸업)',
     period: '2018.03 - 2022.02',
   },
   {

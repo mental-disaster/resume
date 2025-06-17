@@ -1,5 +1,16 @@
-import { IconBrandDocker, IconBrandReact, IconDatabase, IconDeviceDesktop, IconInfinity, IconSettings, IconBrandTypescript, IconBrandGit, IconBrandPython, IconBrandGolang } from "@tabler/icons-react";
-import React from "react";
+import {
+  IconBrandDocker,
+  IconBrandReact,
+  IconDatabase,
+  IconDeviceDesktop,
+  IconInfinity,
+  IconSettings,
+  IconBrandTypescript,
+  IconBrandGit,
+  IconBrandPython,
+  IconHtml,
+} from '@tabler/icons-react';
+import React from 'react';
 
 export interface Skill {
   category: string;
@@ -14,63 +25,63 @@ export interface Technologies {
 
 export const skills: Skill[] = [
   {
-    category: "frontend",
+    category: 'frontend',
     icon: IconDeviceDesktop,
     tech: [
       {
         icon: IconBrandTypescript,
-        name: "TypeScript"
+        name: 'TypeScript',
       },
       {
         icon: IconBrandReact,
-        name: "React"
+        name: 'React',
       },
-    ]
+      {
+        icon: IconHtml,
+        name: 'HTML/CSS',
+      },
+    ],
   },
   {
-    category: "backend",
+    category: 'backend',
     icon: IconSettings,
     tech: [
       {
         icon: IconBrandPython,
-        name: "Python"
+        name: 'Python',
       },
       {
-        name: "Java"
+        name: 'Java',
       },
       {
-        icon: IconBrandGolang,
-        name: "Golang"
+        name: 'Spring Boot',
       },
-      {
-        name: "Spring Boot"
-      },
-    ]
+    ],
   },
   {
-    category: "database",
+    category: 'database',
     icon: IconDatabase,
     tech: [
       {
-        name: "MariaDB"
+        name: 'MariaDB',
       },
       {
-        name: "Oracle"
+        name: 'Tibero',
       },
-    ]
+    ],
   },
   {
-    category: "devops",
+    category: 'devops',
     icon: IconInfinity,
     tech: [
       {
         icon: IconBrandGit,
-        name: "Git"
+        name: 'Git',
       },
       {
         icon: IconBrandDocker,
-        name: "Docker"
+        name: 'Docker',
       },
-    ]
+    ],
   },
-]; 
+];

@@ -27,14 +27,14 @@ export default function About() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="max-w-3xl mx-auto"
         >
-          <p className="text-gray text-lg leading-relaxed mb-6">
+          <div className="text-gray text-lg mb-6 space-y-4">
             {aboutData.description.map((paragraph, index) => (
-              <span key={index}>
+              <p key={index} className="leading-7 break-words">
                 {paragraph}
-                {index < aboutData.description.length - 1 && <br />}
-              </span>
+              </p>
             ))}
-          </p>
+          </div>
+          
           <div className="grid grid-cols-2 gap-4 mt-8">
             <motion.a
               href="#education"
