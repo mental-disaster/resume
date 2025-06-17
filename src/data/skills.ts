@@ -25,9 +25,6 @@ export const skills: Skill[] = [
         icon: IconBrandReact,
         name: "React"
       },
-      {
-        name: "Thymeleaf"
-      }
     ]
   },
   {
