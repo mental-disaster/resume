@@ -8,7 +8,7 @@ import { education } from '@/data/education';
 import { projects } from '@/data/projects';
 import { contactData } from '@/data/contact';
 import { achievements } from '@/data/achievements';
-import { IconMail, IconPhone, IconBrandGithub } from '@tabler/icons-react';
+import { IconMail, IconPhone } from '@tabler/icons-react';
 
 export default function Home() {
   return (
@@ -37,7 +37,12 @@ export default function Home() {
                 {contactData.social.map((social, index) => (
                   <div key={index} className="flex items-center gap-2">
                     {social.icon && <social.icon size={16} />}
-                    <a href={social.url} target="_blank" rel="noopener noreferrer" className="hover:text-gray break-all">
+                    <a
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-gray break-all"
+                    >
                       {social.url.replace(/^https?:\/\//, '').replace(/^www\./, '')}
                     </a>
                   </div>
@@ -49,9 +54,7 @@ export default function Home() {
           <main className="space-y-6 sm:space-y-8">
             {/* 자기소개 */}
             <section>
-              <h3 className="text-lg sm:text-xl font-bold border-b pb-2 mb-4 sm:mb-6">
-                자기소개
-              </h3>
+              <h3 className="text-lg sm:text-xl font-bold border-b pb-2 mb-4 sm:mb-6">자기소개</h3>
               <div className="text-sm space-y-4">
                 {aboutData.description.map((desc, index) => (
                   <p key={index} className="leading-relaxed">
@@ -63,9 +66,7 @@ export default function Home() {
 
             {/* 경력사항 */}
             <section>
-              <h3 className="text-lg sm:text-xl font-bold border-b pb-2 mb-4 sm:mb-6">
-                경력사항
-              </h3>
+              <h3 className="text-lg sm:text-xl font-bold border-b pb-2 mb-4 sm:mb-6">경력사항</h3>
               {experience.map((exp, index) => (
                 <div key={index} className="border-l-4 border-dark pl-4 sm:pl-6">
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 space-y-1 sm:space-y-0">
@@ -80,12 +81,17 @@ export default function Home() {
                   <p className="text-sm mb-4">{exp.description}</p>
                   <ul className="text-sm space-y-2 ml-4 mb-4">
                     {exp.details.map((detail, idx) => (
-                      <li key={idx} className="list-disc">{detail}</li>
+                      <li key={idx} className="list-disc">
+                        {detail}
+                      </li>
                     ))}
                   </ul>
                   <div className="flex flex-wrap gap-2">
                     {exp.keywords.map((keyword, idx) => (
-                      <span key={idx} className="px-2 sm:px-3 py-1 bg-gray-100 text-xs sm:text-sm rounded">
+                      <span
+                        key={idx}
+                        className="px-2 sm:px-3 py-1 bg-gray-100 text-xs sm:text-sm rounded"
+                      >
                         {keyword}
                       </span>
                     ))}
@@ -109,15 +115,13 @@ export default function Home() {
                       </span>
                     </div>
                     <p className="text-sm mb-2">{project.description}</p>
-                    {project.scale && (
-                      <p className="text-sm mb-3 font-medium">
-                        {project.scale}
-                      </p>
-                    )}
+                    {project.scale && <p className="text-sm mb-3 font-medium">{project.scale}</p>}
                     {project.details && (
                       <ul className="text-sm space-y-2 ml-4 mb-3">
                         {project.details.map((detail, idx) => (
-                          <li key={idx} className="list-disc">{detail}</li>
+                          <li key={idx} className="list-disc">
+                            {detail}
+                          </li>
                         ))}
                       </ul>
                     )}
@@ -133,7 +137,10 @@ export default function Home() {
                     )}
                     <div className="flex flex-wrap gap-2">
                       {project.tech.map((tech, idx) => (
-                        <span key={idx} className="px-2 sm:px-3 py-1 bg-blue-50 text-xs sm:text-sm text-blue-700 rounded">
+                        <span
+                          key={idx}
+                          className="px-2 sm:px-3 py-1 bg-blue-50 text-xs sm:text-sm text-blue-700 rounded"
+                        >
                           {tech}
                         </span>
                       ))}
@@ -145,9 +152,7 @@ export default function Home() {
 
             {/* 기타 */}
             <section>
-              <h3 className="text-lg sm:text-xl font-bold border-b pb-2 mb-4 sm:mb-6">
-                기타
-              </h3>
+              <h3 className="text-lg sm:text-xl font-bold border-b pb-2 mb-4 sm:mb-6">기타</h3>
               <div className="space-y-4">
                 {achievements.map((achievement, index) => (
                   <div key={index} className="border-l-4 border-green-500 pl-4 sm:pl-6">
@@ -163,9 +168,7 @@ export default function Home() {
 
             {/* 교육/활동 */}
             <section>
-              <h3 className="text-lg sm:text-xl font-bold border-b pb-2 mb-4 sm:mb-6">
-                교육/활동
-              </h3>
+              <h3 className="text-lg sm:text-xl font-bold border-b pb-2 mb-4 sm:mb-6">교육/활동</h3>
               <div className="space-y-4">
                 {education.map((edu, index) => (
                   <div key={index} className="border-l-4 border-primary pl-4 sm:pl-6">
@@ -181,18 +184,17 @@ export default function Home() {
 
             {/* 기술스택 */}
             <section>
-              <h3 className="text-lg sm:text-xl font-bold border-b pb-2 mb-4 sm:mb-6">
-                기술스택
-              </h3>
+              <h3 className="text-lg sm:text-xl font-bold border-b pb-2 mb-4 sm:mb-6">기술스택</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 {skills.map((skill, index) => (
                   <div key={index}>
-                    <h4 className="font-semibold mb-3 capitalize">
-                      {skill.category}
-                    </h4>
+                    <h4 className="font-semibold mb-3 capitalize">{skill.category}</h4>
                     <div className="flex flex-wrap gap-2">
                       {skill.tech.map((tech, idx) => (
-                        <span key={idx} className="px-2 sm:px-3 py-1 text-xs sm:text-sm rounded flex items-center gap-1 bg-gray-100">
+                        <span
+                          key={idx}
+                          className="px-2 sm:px-3 py-1 text-xs sm:text-sm rounded flex items-center gap-1 bg-gray-100"
+                        >
                           {tech.icon && <tech.icon className="w-3 h-3 sm:w-4 sm:h-4" />} {tech.name}
                         </span>
                       ))}
