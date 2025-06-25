@@ -6,88 +6,131 @@ export interface Project {
     tech: string[];
     details?: string[];
     link?: string;
+    scale?: string;
+    achievements?: string[];
   }
   
   export const projects: Project[] = [
     {
       title: "국민권익위원회 청렴포털 시스템 유지관리 및 위탁운영",
-      description: "국민권익위원회 청렴포털 대국민, 업무 시스템 유지보수 및 운영",
-      tech: ["Spring framework", "Cubrid"],
-      startedAt: "2024.07",
+      description: "대국민 청렴포털 및 공공기관 업무 시스템 운영, 보안 위협 대응 및 시스템 안정성 확보",
+      tech: ["Spring framework", "Cubrid", "Jenkins", "SVN"],
+      startedAt: "2024.12",
+      scale: "4개 시스템 통합 운영 (대국민/공공기관/위원회/심의의결)",
       details: [
-        "대민 및 내부 업무 시스템 운영 및 기능 유지보수",
-        "사업 초기 웹사이트 장애 발생(공격) 상황에서 신속히 대응하여 문제 원인을 분석 및 복구",
-        "유사 공격 방지를 위해 IP 차단 기능 개발·적용, 5월 초 웹사이트 공격 발생 시 해당 기능으로 즉시 대응하여 시스템 무중단 운영 유지",
-        "내부망 환경에서 SR 신규 요청 알림용 크롬 확장 프로그램을 개발·배포해 팀의 수동 확인 작업을 자동화하고 업무 능률 향상에 기여함",
+        "웹사이트 공격 발생 시 신속 대응하여 IP 차단 기능 개발·적용, 시스템 무중단 운영 유지",
+        "크롬 확장프로그램 개발로 SR 신규 요청 자동 알림 시스템 구축, 수동 확인 작업 자동화",
+        "SQL 인젝션 취약점 제거 및 쿼리 최적화로 시스템 보안성 및 성능 향상"
       ],
+      achievements: [
+        "웹사이트 공격 대응으로 시스템 무중단 운영 유지",
+        "2개월 동안 SR 요청 224건 중 70건 처리 (31% 처리율)"
+      ]
     },
     {
       title: "외교부 재외공관 클라우드 기반 해외정보 범정부 활용체계 구축 3차",
-      description: "외교부 기존, 신규 API 개선 컨설팅 및 백엔드 개발",
+      description: "신규 API 구축 및 기존 API, 데이터 연계 시스템 개선",
       tech: ["Spring Boot", "Docker", "Cubrid"],
       startedAt: "2024.07",
       endedAt: "2024.12",
       details: [
-        "기존 Open API 개선점 분석 및 리팩토링, 신규 개방 대상 API 정의 및 개발 수행",
-        "기존 API가 최대 레벨 데이터만 제공하던 한계를 극복하기 위해 DB 테이블 구조 및 수집 에이전트를 수정",
+        "기존 경보 API 개선으로 지역별 상세 경보 수준 제공 (최고 레벨 → 지역별 세분화)",
+        "해외 주요국 외교부 개방데이터 분석 및 연계 가능성 검토 (미국, 영국, 독일 등)",
       ],
+      achievements: [
+        "기존 API 한계 극복으로 지역별 상세 경보 제공",
+      ]
     },
     {
-      title: "법제처 개방체계 구축 지원",
-      description: "PDF, hwp파일 등 텍스트, 이미지의 법령 정보 추출 자동화",
-      tech: ["Python"],
+      title: "법제처 중앙부처 법령해석 및 특별행정심판 재결례 개방체계 구축",
+      description: "PDF 문서 자동화 처리 및 법령해석 데이터 구조화 시스템 개발",
+      tech: ["Python", "PyMuPDF", "OCR", "REGEX"],
       startedAt: "2024.11",
       endedAt: "2024.11",
+      scale: "수천 건 PDF 문서 자동 처리",
       details: [
-        "문서 내 텍스트 추출 후 JSON 형식으로 저장하는 자동화 작업",
-        "Python 스크립트로 이미지 기반 PDF 대상 OCR(macocr) 전처리 자동화 수행",
+        "PyMuPDF를 활용한 PDF 텍스트 추출 및 JSON 변환 자동화 시스템 구축",
+        "정규표현식 기반 질문-답변 패턴 인식 알고리즘 개발로 데이터 구조화",
+        "OCR 기술 적용으로 이미지 기반 문서 텍스트화 및 검수 프로세스 구축",
+        "페이지 번호, 헤더/푸터 등 노이즈 제거 로직 개발로 데이터 품질 향상"
       ],
+      achievements: [
+        "PDF 문서 자동화 처리 시스템 구축",
+        "정규표현식 기반 데이터 구조화 알고리즘 개발"
+      ]
     },
     {
-      title: "API Gateway 개발",
-      description: "API Gateway 관리 시스템 서버 및 웹페이지 풀스택 개발",
-      tech: ["Golang", "TypeScript", "React", "MariaDB"],
+      title: "API Gateway 관리 시스템 개발",
+      description: "Standalone API Gateway 및 관리자 시스템 풀스택 개발",
+      tech: ["Golang", "React", "TypeScript", "MUI", "MariaDB"],
       startedAt: "2024.03",
       endedAt: "2024.08",
+      scale: "독립 운영 가능한 Gateway + Manager 시스템",
       details: [
-        "API Gateway 관리자 서버(Golang - gorilla/mux, gorm) 및 관리 UI(React, MUI) 개발",
-        "사용자관리, API 관리, 인증키 관리 등 관리 기능 개발",
-        "TDD 및 코드리뷰 진행",
+        "TDD 및 코드리뷰 적용으로 개발 품질 향상 (백엔드 TDD 100% 적용)",
+        "캐싱, 인증, 블랙/화이트 리스팅, 스레스홀딩, 로드밸런싱 등 10+ 기능 구현",
+        "YAML 기반 설정 관리 및 실시간 설정 동기화 시스템 구축",
+        "사용자관리, API관리, 인증키관리 등 관리자 기능 개발",
+        "특허 출원 제안 (Gateway-Manager 간 설정 전달 방식)"
       ],
+      achievements: [
+        "TDD 100% 적용으로 개발 품질 향상"
+      ]
     },
     {
       title: "국토교통부 사업용차량 이력정보 개방체계 구축",
-      description: "사용자 및 관리자 페이지 풀스택 개발",
-      tech: ["Spring Boot", "Thymeleaf", "Tibero"],
+      description: "사용자 및 관리자 페이지 풀스택 개발 및 이메일 시스템 구축",
+      tech: ["Spring Boot", "Thymeleaf", "Tibero", "SMTP"],
       startedAt: "2024.01",
       endedAt: "2024.03",
+      scale: "대국민 서비스 + 관리자 시스템",
       details: [
         "사용자 페이지 및 관리자 시스템 풀스택 개발",
-        "이메일 관련 설정을 외부 설정 파일로 분리하여 코드 재배포 없이 설정 변경 가능하도록 이메일 발송 기능 구현",
+        "이메일 설정 외부화로 코드 재배포 없이 설정 변경 가능하도록 개선",
+        "불필요한 외부 라이브러리 사용을 줄이기 위해 jQuery 제거를 제안, PL 승인 후 fetch API 기반으로 기능을 재구현",
+        "SMTP 이메일 전송 시스템 구축 및 안정화"
       ],
+      achievements: [
+        "이메일 설정을 외부화하여 배포 시간을 단축하고, SMTP 통신 과정에서의 지연을 줄이기 위해 메일 발송 로직을 비동기 처리",
+        "모던 웹 개발 방식 적용"
+      ]
     },
     {
       title: "행정안전부 재난배상책임보험 정보 개방사업",
-      description: "신규 API 백엔드 개발 및 개발 리딩",
-      tech: ["Spring Boot", "MariaDB", "Tibero", "Docker"],
+      description: "신규 API 백엔드 개발 및 프로젝트 리딩",
+      tech: ["Spring Boot", "Java", "Docker", "Cubrid", "Tibero"],
       startedAt: "2023.07",
       endedAt: "2024.01",
+      scale: "7개 API + 관리자 시스템",
       details: [
-        "개방 API 및 관리 시스템 개발",
-        "PL 중도 퇴사로 개발 리딩 및 일정 조율 업무 수행",
-        "23년 말 정부 행정망 장애로 인한 일정 지연 상황에서 신속히 대응하여 프로젝트 일정 재조율",
+        "개방 API 7개 및 관리 시스템 개발",
+        "PL 역할 수행하며 개발팀 리딩 및 일정 조율",
+        "정부 행정망 장애 상황에서 신속 대응하여 프로젝트 일정 재조율",
+        "Docker 기반 배포 환경 구축 및 운영 안정화",
+        "산출물 10종 작성 (표준용어정의서, ERD, API설계서 등)"
       ],
+      achievements: [
+        "PL 역할 수행하며 프로젝트 성공적 완료",
+        "산출물 10종 작성 및 시스템 구축 완료"
+      ]
     },
     {
       title: "여성가족부 아이돌봄 통합지원 플랫폼 구축사업 1단계",
       description: "아이돌봄 포털 대국민, 업무 시스템 풀스택 개발",
-      tech: ["Spring Boot", "Thymeleaf", "Bootstrap", "Tibero"],
+      tech: ["Spring Boot", "Thymeleaf", "Bootstrap", "Tibero", "SASS"],
       startedAt: "2022.04",
       endedAt: "2023.06",
+      scale: "14개월 대규모 프로젝트, 3개 시스템 통합",
       details: [
         "사용자 포털 및 내부 업무 시스템 풀스택 개발",
-        "사용자 원장(상세보기)의 기존 다중 팝업 구조를 하나의 메인 팝업에서 모든 기능을 처리하도록 통합하여 UI/UX 단순화 및 유지보수성 개선",
-        "사업기관 세부사항 등록/수정 화면의 무한 클릭 Depth를 불필요한 기능을 제거하고 드롭다운 및 숨김처리 방식으로 재설계하여 최대 4회 클릭 내 모든 기능 접근 가능하도록 사용자 동선 최적화"
+        "레거시 시스템 리팩토링 및 DB 트랜잭션 최적화 (트리거 제거, 비즈니스 로직을 DB 프로시저에서 애플리케이션 레이어로 이전)",
+        "사용자 원장 다중 팝업 구조를 단일 팝업으로 통합하여 UI/UX 개선",
+        "사업기관 세부사항 등록/수정 화면 재설계로 사용자 동선 최적화 (최대 4회 클릭)",
+        "Trello 기반 실시간 PO팀 소통으로 개발 진행"
       ],
+      achievements: [
+        "레거시 시스템 리팩토링 및 UI/UX 개선",
+        "사용자 동선 최적화 (최대 4회 클릭으로 단순화)"
+      ]
     }
   ];
