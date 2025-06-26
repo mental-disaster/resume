@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
-import { achievements } from '@/data/achievements'
-import { AchievementCard } from '@/components/cards/AchievementCard'
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
+import { achievements } from '@/data/achievements';
+import { AchievementCard } from '@/components/cards/AchievementCard';
 
 export default function Achievements() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true })
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
 
   return (
     <section id="achievements" className="py-20 bg-gradient-to-b from-white via-sub/10 to-white">
@@ -27,5 +27,5 @@ export default function Achievements() {
         </div>
       </div>
     </section>
-  )
+  );
 }

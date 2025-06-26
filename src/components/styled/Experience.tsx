@@ -1,21 +1,21 @@
-"use client"
+'use client';
 
-import { motion } from 'framer-motion'
-import { useRef } from 'react'
-import { useInView } from 'framer-motion'
-import { experience } from '@/data/experience'
-import { ExperienceCard } from '@/components/cards/ExperienceCard'
-import { Utils } from '@/components/common/Utils'
-import { ShadowBadge } from './badges/ShadowBadge'
+import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { useInView } from 'framer-motion';
+import { experience } from '@/data/experience';
+import { ExperienceCard } from '@/components/cards/ExperienceCard';
+import { Utils } from '@/components/common/Utils';
+import { ShadowBadge } from '@/components/badges/ShadowBadge';
 
 export default function Experience() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true })
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
 
   return (
     <section id="experience" className="py-20 bg-gradient-to-b from-white via-sub/10 to-white">
       <div className="container mx-auto px-4">
-        <motion.h2 
+        <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : undefined}
           transition={{ duration: 0.5 }}
@@ -38,5 +38,5 @@ export default function Experience() {
         </div>
       </div>
     </section>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import { contactData } from '@/data/contact'
+import { contactData } from '@/data/contact';
 
 export default function Contact() {
   return (
@@ -11,7 +11,10 @@ export default function Contact() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <div className="text-center">
               <h3 className="font-semibold mb-2">{contactData.email.label}</h3>
-              <a href={`mailto:${contactData.email.value}`} className="text-primary hover:underline">
+              <a
+                href={`mailto:${contactData.email.value}`}
+                className="text-primary hover:underline"
+              >
                 {contactData.email.value}
               </a>
             </div>
@@ -24,11 +27,11 @@ export default function Contact() {
           </div>
           <div className="flex justify-center space-x-6">
             {contactData.social.map((social, index) => (
-              <a 
+              <a
                 key={index}
-                href={social.url} 
-                target="_blank" 
-                rel="noopener noreferrer" 
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray"
               >
                 {social.icon ? <social.icon className="w-6 h-6" /> : social.label}
@@ -38,5 +41,5 @@ export default function Contact() {
         </div>
       </div>
     </section>
-  )
+  );
 }

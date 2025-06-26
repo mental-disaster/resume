@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
-import { skills } from '@/data/skills'
-import { SkillCard } from './cards/SkillCard'
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
+import { skills } from '@/data/skills';
+import { SkillCard } from '@/components/cards/SkillCard';
 
 export default function Skills() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true })
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
 
   return (
     <section id="skills" className="py-20 bg-gradient-to-b from-white via-sub/10 to-white">
@@ -29,5 +29,5 @@ export default function Skills() {
         </div>
       </div>
     </section>
-  )
+  );
 }

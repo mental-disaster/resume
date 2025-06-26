@@ -1,11 +1,11 @@
-import Hero from '@/components/Hero';
-import About from '@/components/About';
-import Experience from '@/components/Experience';
-import Projects from '@/components/Projects';
-import Skills from '@/components/Skills';
-import Achievements from '@/components/Achievements';
-import Contact from '@/components/Contact';
-import Education from '@/components/Education';
+import Hero from '@/components/styled/Hero';
+import About from '@/components/styled/About';
+import Experience from '@/components/styled/Experience';
+import Projects from '@/components/styled/Projects';
+import Skills from '@/components/styled/Skills';
+import Achievements from '@/components/styled/Achievements';
+import Contact from '@/components/styled/Contact';
+import Education from '@/components/styled/Education';
 
 export default function Page() {
   return (

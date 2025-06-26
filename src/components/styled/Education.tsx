@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
-import { education } from '@/data/education'
-import { EducationCard } from '@/components/cards/EducationCard'
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
+import { education } from '@/data/education';
+import { EducationCard } from '@/components/cards/EducationCard';
 
 export default function Education() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true })
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
 
   return (
     <section id="education" className="py-20 bg-gradient-to-b from-white via-sub/10 to-white">
@@ -20,15 +20,12 @@ export default function Education() {
         >
           교육/활동
         </motion.h2>
-        <div
-          ref={ref}
-          className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8"
-        >
+        <div ref={ref} className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
           {education.map((edu, index) => (
             <EducationCard key={index} education={edu} />
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }
