@@ -56,8 +56,9 @@ resume-tailwind/
 
 ## 배포
 
-이 프로젝트는 Vercel에 배포되어 있으며, 다음 링크에서 확인하실 수 있습니다:
+이 프로젝트는 Vercel에 배포되어 있으며, 다음 링크에서 확인하실 수 있습니다:  
 [이력서 웹사이트](https://resume-tailwind-wheat.vercel.app/)
+[이력서 웹사이트(styled)](https://resume-tailwind-wheat.vercel.app/styled)
 
 ### 배포 방법
 
