@@ -3,7 +3,7 @@ import { experience } from '@/data/experience';
 export default function Experience() {
   return (
     <section>
-      <h3 className="text-lg sm:text-xl font-bold border-b pb-2 mb-6 print:mb-4 print:mb-2 print:break-after-avoid">
+      <h3 className="text-lg sm:text-xl font-bold border-b pb-2 mb-6 print:mb-2 print:break-after-avoid">
         경력사항
       </h3>
       {experience.map((exp, index) => (
@@ -23,10 +23,10 @@ export default function Experience() {
           {exp.projects && exp.projects.length > 0 && (
             <div className="space-y-4 print:space-y-2">
               {exp.projects.map((project, idx) => (
-                <div key={idx} className="rounded-lg p-4 print:break-inside-avoid print:p-3">
+                <div key={idx} className="p-4 print:break-inside-avoid print:p-3">
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3 print:mb-2">
                     <h5 className="font-semibold print:text-sm">{project.title}</h5>
-                    <span className="text-xs whitespace-nowrap">
+                    <span className="text-sm text-gray whitespace-nowrap">
                       {project.startedAt} - {project.endedAt || '진행중'}
                     </span>
                   </div>
@@ -43,9 +43,11 @@ export default function Experience() {
                   {project.details && project.details.length > 0 && (
                     <ul className="text-sm space-y-1 mb-3 print:space-y-0 print:mb-2">
                       {project.details.map((detail, detailIdx) => (
-                        <li key={detailIdx} className="flex items-start">
-                          <span className="mr-1">•</span>
-                          <span className="leading-relaxed print:leading-tight">{detail}</span>
+                        <li
+                          key={detailIdx}
+                          className="list-disc leading-relaxed print:leading-tight ml-4"
+                        >
+                          {detail}
                         </li>
                       ))}
                     </ul>

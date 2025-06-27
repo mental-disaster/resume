@@ -1,4 +1,5 @@
 import { projects } from '@/data/projects';
+import { IconExternalLink } from '@tabler/icons-react';
 
 export default function Projects() {
   return (
@@ -8,17 +9,37 @@ export default function Projects() {
       </h3>
       <div className="space-y-6">
         {projects.map((project, index) => (
-          <div key={index}>
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 space-y-1 sm:space-y-0">
-              <h4 className="text-base sm:text-lg font-semibold">{project.title}</h4>
-              <span className="text-sm text-gray">
+          <div key={index} className="print:break-inside-avoid">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 space-y-1 sm:space-y-0 print:mb-2">
+              <div className="flex items-center gap-2">
+                <h4 className="font-semibold print:text-sm">{project.title}</h4>
+                {project.link && (
+                  <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center w-5 h-5 print:hidden"
+                    aria-label={`${project.title} 링크`}
+                  >
+                    <IconExternalLink className="w-4 h-4" />
+                  </a>
+                )}
+              </div>
+              <span className="text-sm text-gray whitespace-nowrap whitespace-nowrap">
                 {project.startedAt} - {project.endedAt || '진행중'}
               </span>
             </div>
-            <p className="text-sm mb-2">{project.description}</p>
-            {project.scale && <p className="text-sm mb-3 font-medium">{project.scale}</p>}
+
+            <p className="text-sm mb-2 leading-relaxed print:leading-tight">
+              {project.description}
+            </p>
+
+            {project.scale && (
+              <p className="text-sm mb-3 font-medium print:mb-2">{project.scale}</p>
+            )}
+
             {project.details && (
-              <ul className="text-sm space-y-2 ml-4 mb-3">
+              <ul className="text-sm space-y-2 ml-4 mb-3 print:space-y-0 print:mb-2">
                 {project.details.map((detail, idx) => (
                   <li key={idx} className="list-disc">
                     {detail}
@@ -26,21 +47,12 @@ export default function Projects() {
                 ))}
               </ul>
             )}
-            {project.achievements && (
-              <div className="bg-success/10 p-3 rounded-lg mb-3 border border-success">
-                <h5 className="text-sm font-semibold text-green-800 mb-2">주요 성과</h5>
-                <ul className="text-sm text-green-700 space-y-1">
-                  {project.achievements.map((achievement, idx) => (
-                    <li key={idx}>{achievement}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <div className="flex flex-wrap gap-2">
+
+            <div className="flex flex-wrap gap-2 print:gap-1.5">
               {project.tech.map((tech, idx) => (
                 <span
                   key={idx}
-                  className="px-2 sm:px-3 py-1 bg-blue-50 text-xs sm:text-sm text-blue-700 rounded"
+                  className="px-2 sm:px-3 py-1 bg-info text-xs sm:text-sm text-dark rounded print:px-1 print:py-0.5"
                 >
                   {tech}
                 </span>

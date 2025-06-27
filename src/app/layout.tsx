@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 import { ReactLenis } from 'lenis/react';
+import FloatingButton from '@/components/common/FloatingButton';
 
 export const metadata: Metadata = {
   title: "HELLO I'M LIM GYEONGHUN",
@@ -17,6 +18,7 @@ export default function RootLayout({
     <html lang="ko">
       <body className="antialiased">
         <ReactLenis root>{children}</ReactLenis>
+        <FloatingButton />
       </body>
     </html>
   );
