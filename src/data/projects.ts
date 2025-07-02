@@ -17,9 +17,9 @@ export const projects: Project[] = [
     startedAt: '2025.06',
     tech: ['Next.js', 'TypeScript', 'Tailwind CSS'],
     details: [
-      'BFF(Backend for Frontend) 패턴 적용으로 마이크로서비스와 효율적 통신 구현',
+      '마이크로서비스와 효율적 통신 구현을 위한 BFF(Backend for Frontend) 패턴 적용',
       'ESLint·Prettier·Husky 연동·Jest 테스트 구성으로 커밋 전 코드 스타일·품질 자동 검증',
-      'GitHub Flow 기반 PR 프로세스 참여 및 4건의 기능별 Pull Request 머지 경험',
+      'GitHub Flow 기반 PR 프로세스 참여 및 기능별 Pull Request 머지 경험',
     ],
     link: 'https://github.com/devnogi/devnogi-react',
   },
