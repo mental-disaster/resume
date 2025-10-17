@@ -7,8 +7,8 @@ export default function About() {
         자기소개
       </h3>
       <div className="text-sm space-y-4">
-        {aboutData.description.map((desc, index) => (
-          <p key={index} className="leading-relaxed">
+        {aboutData.strengths.map((desc, index) => (
+          <p key={index} className="leading-relaxed whitespace-pre-line">
             {desc}
           </p>
         ))}

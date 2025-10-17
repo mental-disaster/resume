@@ -1,37 +1,51 @@
 export interface Education {
-    degree: string;
-    school: string;
-    period: string;
-  }
-  
-  export interface Experience {
-    position: string;
-    company: string;
-    period: string;
-  }
-  
-  export interface AboutData {
-    title: string;
-    description: string[];
-    education: Education;
-    experience: Experience;
-  }
-  
-  export const aboutData: AboutData = {
-    title: "About Me",
-    description: [
-      "기술은 제게 단순한 업무 도구를 넘어 일상과 취미에서도 활용하는 수단입니다. 게임 중 버그를 발견하면 원인을 분석해 개발자에게 공유하거나, 코드 노출을 통해 오류를 직접 수정해 정상 플레이한 경험도 있습니다.",
-      "업무에서는 작업 전에 시스템의 구조와 동작 방식을 확실히 파악하는 것을 중시합니다. 덕분에 동료들이 시스템 구조나 작동 방식에 대해 궁금할 때면 저에게 묻곤 하며, 시작은 느릴 수 있어도 결과적으로는 더 빠르고 신뢰성 있게 문제를 해결합니다.",
-      "앞으로는 전문성을 강화하고, 플랫폼 설계, DevOps 환경 개선 등 구조와 전략이 중요한 영역에서 팀에 기여하고 싶습니다.",
-    ],
-    education: {
-      degree: "컴퓨터공학 학사 졸업",
-      school: "인천대학교 (3.74/4.5)",
-      period: "2018-2022"
-    },
-    experience: {
-      position: "풀스택 개발자",
-      company: "프람트테크놀로지",
-      period: "2022-현재"
-    }
-  };
+  degree: string;
+  school: string;
+  period: string;
+}
+
+export interface Experience {
+  position: string;
+  company: string;
+  period: string;
+}
+
+export interface AboutData {
+  title: string;
+  description: string[];
+  strengths: string[];
+  education: Education;
+  experience: Experience;
+}
+
+export const aboutData: AboutData = {
+  title: 'About Me',
+  description: [
+    `안녕하세요. 서버개발자 임경훈입니다.`,
+    `저는 일상에서 마주치는 문제를 개발자의 시선으로 바라보고, 직접 해결하려고 합니다.
+      게임을하다 발견한 버그를 개발자와 이메일로 연락하며 디버깅하고, 단순한 반복작업을 스크립트나 매크로를 직접 구현해 해결하며, 불편한 웹 서비스는 직접 확장프로그램을 개발해 개선합니다.`,
+    `설계는 유행보다는 맥락을 따라야한다고 생각합니다.
+      오버엔지니어링을 피하고, 지금 필요한 만큼만 단순하게 시작하되 언제든 확장할 수 있는 구조로 설계하려 노력합니다.`,
+    `기술은 목적이 아니라 도구입니다.
+      물론 100개의 기술을 얕게 아는 것보다 하나의 기술을 깊이 이해하는 것이 중요하지만, 필요한 순간에 적절한 도구를 선택할 수 있도록 새로운 기술에도 열린 자세를 유지하려 합니다.`,
+    `앞으로도 이런 태도로, 현실의 문제를 기술로 풀어내는 개발자가 되고자 합니다.`,
+  ],
+  strengths: [
+    '대규모 공공 시스템 구축 및 운영, PL 경험을 가진 Java, Spring 기반의 백엔드/풀스택 개발자입니다.',
+    `핵심역량
+      \u00A0\u00A0- 레거시 시스템을 분석하여 문제점을 개선하고, 고도화된 신규 시스템으로 재구축
+      \u00A0\u00A0- 쿼리 튜닝을 통해 성능 최적화와 보안 취약점 제거, 코드 가독성과 같은 품질 개선
+      \u00A0\u00A0- 원천 데이터 수집·추출·변환(ETL)·적재 및 API 제공 파이프라인 설계·구현 경험
+      \u00A0\u00A0- 프로젝트 PL로서 팀 내·외 이해관계자와의 원활한 협업, 소통 능력`,
+  ],
+  education: {
+    degree: '컴퓨터공학 학사 졸업',
+    school: '인천대학교 (3.74/4.5)',
+    period: '2018-2022',
+  },
+  experience: {
+    position: '풀스택 개발자',
+    company: '프람트테크놀로지',
+    period: '2022-현재',
+  },
+};

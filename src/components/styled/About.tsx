@@ -29,7 +29,7 @@ export default function About() {
         >
           <div className="text-gray text-lg mb-6 space-y-4">
             {aboutData.description.map((paragraph, index) => (
-              <p key={index} className="leading-7 break-words">
+              <p key={index} className="leading-7 break-words whitespace-pre-line">
                 {paragraph}
               </p>
             ))}
