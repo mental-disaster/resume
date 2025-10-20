@@ -25,7 +25,7 @@ export default function FloatingButton() {
   const isStyledRoute = pathname === '/styled';
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2 print:hidden">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2">
       <button
         onClick={toggleRoute}
         className="w-8 sm:w-10 h-8 sm:h-10 bg-success/80 hover:bg-success rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group"
