@@ -24,20 +24,11 @@ export default function Experience() {
             <div className="space-y-4 print:space-y-2">
               {exp.projects.map((project, idx) => (
                 <div key={idx} className="p-4 print:break-inside-avoid print:p-3">
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3 print:mb-2">
-                    <h5 className="font-semibold print:text-sm">{project.title}</h5>
-                    <span className="text-sm text-gray whitespace-nowrap">
-                      {project.startedAt} - {project.endedAt || '진행중'}
-                    </span>
-                  </div>
+                  <h5 className="font-semibold print:text-sm">{project.title}</h5>
 
-                  <p className="text-sm mb-2 leading-relaxed print:leading-tight">
-                    {project.description}
+                  <p className="text-sm text-gray mb-2 leading-relaxed">
+                    {project.position} / {project.startedAt} - {project.endedAt || '진행중'}
                   </p>
-
-                  {project.scale && (
-                    <p className="text-xs mb-3 font-medium print:mb-2">{project.scale}</p>
-                  )}
 
                   {/* 세부사항 */}
                   {project.details && project.details.length > 0 && (

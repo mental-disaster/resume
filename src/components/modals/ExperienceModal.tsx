@@ -68,16 +68,17 @@ export const ExperienceModal = ({ exp, onClose }: { exp: Experience; onClose: ()
               <div className="space-y-4">
                 {exp.projects.map((project, idx) => (
                   <div key={idx} className="bg-gray-50 rounded-lg p-4">
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
                       <h4 className="text-base font-semibold">{project.title}</h4>
                       <span className="text-xs whitespace-nowrap">
                         {project.startedAt} - {project.endedAt || '진행중'}
                       </span>
                     </div>
 
-                    <p className="text-sm mb-2 leading-relaxed">{project.description}</p>
-
-                    {project.scale && <p className="text-xs mb-3 font-medium">{project.scale}</p>}
+                    <p className="text-sm mb-2 text-grey leading-relaxed">
+                      {project.position ? `${project.position} - ` : ''}
+                      {project.description}
+                    </p>
 
                     {/* 세부사항 */}
                     {project.details && project.details.length > 0 && (
@@ -89,21 +90,6 @@ export const ExperienceModal = ({ exp, onClose }: { exp: Experience; onClose: ()
                           </li>
                         ))}
                       </ul>
-                    )}
-
-                    {/* 성과 */}
-                    {project.achievements && project.achievements.length > 0 && (
-                      <div className="bg-green-50 border border-green-200 rounded-md p-3 mb-3">
-                        <h5 className="text-sm font-semibold text-green-800 mb-2">주요 성과</h5>
-                        <ul className="text-sm text-green-700 space-y-1">
-                          {project.achievements.map((achievement, achievementIdx) => (
-                            <li key={achievementIdx} className="flex items-start">
-                              <span className="text-green-500 mr-2 mt-1">✓</span>
-                              <span className="leading-relaxed">{achievement}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
                     )}
 
                     {/* 기술스택 */}

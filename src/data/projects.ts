@@ -3,10 +3,10 @@ export interface Project {
   description: string;
   startedAt: string;
   endedAt?: string;
+  position?: string;
   tech: string[];
   details?: string[];
   link?: string;
-  scale?: string;
   achievements?: string[];
 }
 
