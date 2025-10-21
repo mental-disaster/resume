@@ -20,7 +20,7 @@ export const experience: Experience[] = [
     icon: IconBrowser,
     projects: [
       {
-        title: '국민권익위원회 청렴포털 시스템 유지관리 및 위탁운영',
+        title: '청렴포털 서비스 안정화 및 운영 고도화',
         description:
           '대국민 청렴포털 및 공공기관 업무 시스템 운영, 보안 위협 대응 및 시스템 안정성 확보',
         tech: ['Spring framework', 'Cubrid', 'Jenkins', 'SVN'],
@@ -37,9 +37,8 @@ export const experience: Experience[] = [
         ],
       },
       {
-        title: '사내 회의 관리 웹서비스 유지보수 및 기능개선',
-        description:
-          '대국민 청렴포털 및 공공기관 업무 시스템 운영, 보안 위협 대응 및 시스템 안정성 확보',
+        title: '사내 회의 관리 웹서비스 개선',
+        description: '사내 회의 관리 웹서비스 유지보수 및 기능개선',
         tech: ['Next.js', 'TypeScript', 'AWS'],
         startedAt: '2025.03',
         endedAt: '2025.10',
@@ -56,8 +55,8 @@ export const experience: Experience[] = [
         ],
       },
       {
-        title: '외교부 재외공관 클라우드 기반 해외정보 범정부 활용체계 구축 3차',
-        description: '신규 API 구축 및 기존 API, 데이터 연계 시스템 개선',
+        title: '글로벌 재외공관 데이터 API 개방 및 개선',
+        description: '외교부 재외공관 신규 API 구축 및 기존 API, 데이터 연계 시스템 개선',
         tech: ['Spring Boot', 'Docker', 'Cubrid'],
         startedAt: '2024.07',
         endedAt: '2024.12',
@@ -70,7 +69,7 @@ export const experience: Experience[] = [
         achievements: ['기존 API 한계 극복으로 지역별 상세 경보 제공'],
       },
       {
-        title: '법제처 중앙부처 법령해석 및 특별행정심판 재결례 개방체계 구축',
+        title: '문서 전처리 및 데이터 구조화 시스템 개발',
         description: 'PDF 문서 자동화 처리 및 법령해석 데이터 구조화 시스템 개발',
         tech: ['Python', 'PyMuPDF', 'OCR', 'REGEX'],
         startedAt: '2024.11',
@@ -88,7 +87,7 @@ export const experience: Experience[] = [
         ],
       },
       {
-        title: 'API Gateway 관리 시스템 개발',
+        title: 'API Gateway 백오피스 개발',
         description: 'Standalone API Gateway 및 관리자 시스템 풀스택 개발',
         tech: ['Go', 'React', 'TypeScript', 'MUI', 'MariaDB'],
         startedAt: '2024.03',
@@ -106,8 +105,9 @@ export const experience: Experience[] = [
         ],
       },
       {
-        title: '국토교통부 사업용차량 이력정보 개방체계 구축',
-        description: '사용자 및 관리자 페이지 풀스택 개발 및 이메일 시스템 구축',
+        title: '차량 이력정보 오픈 API 플랫폼 구축',
+        description:
+          '국토교통부 사업용차량 이력정보 사용자 및 관리자 페이지 풀스택 개발 및 이메일 시스템 구축',
         tech: ['Spring Boot', 'Thymeleaf', 'Tibero', 'SMTP'],
         startedAt: '2024.01',
         endedAt: '2024.03',
@@ -123,8 +123,8 @@ export const experience: Experience[] = [
         ],
       },
       {
-        title: '행정안전부 재난배상책임보험 정보 개방사업',
-        description: '신규 API 백엔드 개발 및 개방',
+        title: '보험 정보 데이터 파이프라인 및 API 제공 시스템 구축',
+        description: '행정안전부 재난배상책임보험 정보 개방사업 신규 API 백엔드 개발 및 개방',
         tech: ['Spring Boot', 'Java', 'Docker', 'Cubrid', 'Tibero'],
         startedAt: '2023.07',
         endedAt: '2024.01',
@@ -141,8 +141,8 @@ export const experience: Experience[] = [
         ],
       },
       {
-        title: '여성가족부 아이돌봄 통합지원 플랫폼 구축사업 1단계',
-        description: '아이돌봄 포털 대국민, 업무 시스템 풀스택 개발',
+        title: '돌봄 서비스 통합 플랫폼 고도화',
+        description: '여성가족부 아이돌봄 포털 대국민, 업무 시스템 풀스택 개발',
         tech: ['Spring Boot', 'Thymeleaf', 'Bootstrap', 'Tibero', 'SASS'],
         startedAt: '2022.04',
         endedAt: '2023.06',
