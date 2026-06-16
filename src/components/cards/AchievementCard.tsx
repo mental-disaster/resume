@@ -1,17 +1,17 @@
-'use client'
+'use client';
 
-import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
-import { Achievement } from '@/data/achievements'
-import Image from 'next/image'
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
+import { Achievement } from '@/data/achievements';
+import Image from 'next/image';
 
 export const AchievementCard = ({ achievement }: { achievement: Achievement }) => {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.3 })
-  const Icon = achievement.icon
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.3 });
+  const Icon = achievement.icon;
 
   const CardContent = (
-      <motion.div
+    <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 20 }}
       animate={isInView ? { opacity: 1, y: 0 } : undefined}
@@ -30,16 +30,18 @@ export const AchievementCard = ({ achievement }: { achievement: Achievement }) =
         </div>
       )}
 
-      <div className={`${achievement.image ? 'relative z-0 group-hover:opacity-30 duration-300' : ''}`}>
+      <div
+        className={`${achievement.image ? 'relative z-0 group-hover:opacity-30 duration-300' : ''}`}
+      >
         <div className="flex items-center gap-3 mb-4">
           <Icon className="w-6 h-6 text-primary" />
           <h3 className="text-xl font-semibold">{achievement.title}</h3>
         </div>
-        <p className="text-gray text-sm mb-1">{achievement.detail}</p>
-        <p className="text-gray text-xs">{achievement.date}</p>
+        <p className="text-grey text-sm mb-1">{achievement.detail}</p>
+        <p className="text-grey text-xs">{achievement.date}</p>
       </div>
     </motion.div>
-  )
+  );
 
   return achievement.link ? (
     <a href={achievement.link} target="_blank" rel="noopener noreferrer">
@@ -47,5 +49,5 @@ export const AchievementCard = ({ achievement }: { achievement: Achievement }) =
     </a>
   ) : (
     CardContent
-  )
-}
+  );
+};

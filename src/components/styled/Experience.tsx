@@ -11,6 +11,8 @@ import { ShadowBadge } from '@/components/badges/ShadowBadge';
 export default function Experience() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
+  // 카드/합계 표시가 같은 기준 시점을 쓰도록 한 번만 계산해 주입한다.
+  const now = new Date();
 
   return (
     <section id="experience" className="py-20 bg-gradient-to-b from-white via-sub/10 to-white">
@@ -29,11 +31,11 @@ export default function Experience() {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <ShadowBadge label={`총 ${Utils.getTotalCareerDuration(experience)}`} />
+          <ShadowBadge label={`총 ${Utils.getTotalCareerDuration(experience, now)}`} />
         </motion.div>
         <div ref={ref} className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
           {experience.map((exp, index) => (
-            <ExperienceCard key={index} exp={exp} />
+            <ExperienceCard key={index} exp={exp} now={now} />
           ))}
         </div>
       </div>

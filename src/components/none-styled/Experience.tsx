@@ -24,7 +24,7 @@ export default function Experience() {
                 <div key={idx} className="p-4">
                   <h5 className="font-semibold">{project.title}</h5>
 
-                  <p className="text-sm text-gray mb-2 leading-relaxed">
+                  <p className="text-sm text-grey mb-2 leading-relaxed">
                     {project.position} / {project.startedAt} - {project.endedAt || '진행중'}
                   </p>
 

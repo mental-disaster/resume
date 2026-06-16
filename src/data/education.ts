@@ -8,7 +8,7 @@ export interface Education {
   link?: string;
 }
 
-export const education = [
+export const education: Education[] = [
   {
     icon: IconSchool,
     institution: '인천대학교 컴퓨터공학부',

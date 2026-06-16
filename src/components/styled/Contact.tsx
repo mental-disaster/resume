@@ -32,7 +32,7 @@ export default function Contact() {
                 href={social.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray"
+                className="text-grey"
               >
                 {social.icon ? <social.icon className="w-6 h-6" /> : social.label}
               </a>

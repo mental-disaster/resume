@@ -4,7 +4,7 @@
 
 ## 기술 스택
 
-- **프레임워크**: Next.js 15.3.2
+- **프레임워크**: Next.js 15
 - **언어**: TypeScript
 - **스타일링**: Tailwind CSS
 
@@ -13,19 +13,19 @@
 ### 필수 조건
 
 - Node.js (22 버전 권장)
-- npm
+- pnpm
 
 ### 설치
 
 ```bash
 # 의존성 설치
-npm install
+pnpm install
 ```
 
 ### 개발 서버 실행
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 개발 서버는 [http://localhost:3000](http://localhost:3000)에서 실행됩니다.
@@ -33,8 +33,8 @@ npm run dev
 ### 프로덕션 빌드
 
 ```bash
-npm run build
-npm run start
+pnpm run build
+pnpm run start
 ```
 
 ## 프로젝트 구조
@@ -48,17 +48,11 @@ resume-tailwind/
 └── public/       # 정적 파일
 ```
 
-## 주의사항
-
-- Next.js 15.3.2 버전을 사용하고 있으며, Turbopack을 개발 서버에 적용했습니다.
-- React 19를 사용하고 있어 최신 기능들을 활용할 수 있습니다.
-- TypeScript를 사용하여 타입 안정성을 보장합니다.
-
 ## 배포
 
 이 프로젝트는 Vercel에 배포되어 있으며, 다음 링크에서 확인하실 수 있습니다:  
-[이력서 웹사이트](https://resume-tailwind-wheat.vercel.app/)
-[이력서 웹사이트(styled)](https://resume-tailwind-wheat.vercel.app/styled)
+[이력서 웹사이트](https://resume.imgh.dev/)
+[이력서 웹사이트(styled)](https://resume.imgh.dev/styled)
 
 ### 배포 방법
 
@@ -69,5 +63,5 @@ resume-tailwind/
 ### 배포 환경
 
 - **호스팅**: Vercel
-- **도메인**: resume-tailwind-wheat.vercel.app
+- **도메인**: resume.imgh.dev
 - **배포 상태**: 프로덕션

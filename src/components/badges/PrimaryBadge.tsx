@@ -1,12 +1,6 @@
 import clsx from 'clsx';
 
-export const PrimaryBadge = ({
-  label,
-  className,
-}: {
-  label: string;
-  className?: string;
-}) => {
+export const PrimaryBadge = ({ label, className }: { label: string; className?: string }) => {
   return (
     <span
       className={clsx(

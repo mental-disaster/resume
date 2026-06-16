@@ -27,7 +27,7 @@ export default function About() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="max-w-3xl mx-auto"
         >
-          <div className="text-gray text-lg mb-6 space-y-4">
+          <div className="text-grey text-lg mb-6 space-y-4">
             {aboutData.description.map((paragraph, index) => (
               <p key={index} className="leading-7 break-words whitespace-pre-line">
                 {paragraph}
@@ -44,8 +44,8 @@ export default function About() {
               className="bg-light/30 p-4 rounded-lg"
             >
               <h3 className="font-semibold mb-2">교육</h3>
-              <p className="text-gray">{aboutData.education.degree}</p>
-              <p className="text-gray text-sm">
+              <p className="text-grey">{aboutData.education.degree}</p>
+              <p className="text-grey text-sm">
                 {aboutData.education.school}, {aboutData.education.period}
               </p>
             </motion.a>
@@ -57,8 +57,8 @@ export default function About() {
               className="bg-light/30 p-4 rounded-lg"
             >
               <h3 className="font-semibold mb-2">경력</h3>
-              <p className="text-gray">{aboutData.experience.position}</p>
-              <p className="text-gray text-sm">
+              <p className="text-grey">{aboutData.experience.position}</p>
+              <p className="text-grey text-sm">
                 {aboutData.experience.company}, {aboutData.experience.period}
               </p>
             </motion.a>

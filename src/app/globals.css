@@ -2,58 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  /* 스크롤바 숨기기 */
-  /* Chrome, Safari */
-  ::-webkit-scrollbar {
-    display: none;
-  }
-  
-  /* Firefox */
-  * {
-    scrollbar-width: none;
-  }
-  
-  /* IE and Edge */
-  * {
-    -ms-overflow-style: none;
-  }
-}
-
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --color-primary: #1E90FF;
-  --color-secondary: #4682B4;
-  --color-accent: #00BFFF;
-  --color-light: #00D6FA;
-  --color-dark: #106FC7;
-  --color-black: #2B2B2B;
-  --color-white: #FFFFFF;
-  --color-grey: #2A425B;
-  --color-sub: #7CD0FF;
+  --color-primary: #1e90ff;
+  --color-secondary: #4682b4;
+  --color-accent: #00bfff;
+  --color-light: #00d6fa;
+  --color-dark: #106fc7;
+  --color-black: #2b2b2b;
+  --color-white: #ffffff;
+  --color-grey: #2a425b;
+  --color-sub: #7cd0ff;
 
-  --color-success: #00C9A7;
-  --color-warning: #FFB86C;
-  --color-error: #FF5555;
-  --color-info: #8BE9FD;
+  --color-success: #00c9a7;
+  --color-warning: #ffb86c;
+  --color-error: #ff5555;
+  --color-info: #8be9fd;
 }
 
 @font-face {
   font-family: 'GCT';
   src: url('/fonts/GCT_Light.woff') format('woff');
-  font-weight: normal, 300;
+  font-weight: 300;
   font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: 'GCT';
   src: url('/fonts/GCT_Medium.woff') format('woff');
   font-weight: 500;
   font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: 'GCT';
   src: url('/fonts/GCT_Bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
+  font-display: swap;
 }

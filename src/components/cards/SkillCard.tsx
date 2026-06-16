@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
-import { Skill } from '@/data/skills'
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
+import { Skill } from '@/data/skills';
 
 export function SkillCard({ skill }: { skill: Skill }) {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.3 })
-  const Icon = skill.icon
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.3 });
+  const Icon = skill.icon;
 
   return (
     <motion.div
@@ -22,7 +22,7 @@ export function SkillCard({ skill }: { skill: Skill }) {
         <h3 className="text-xl font-semibold">{skill.category}</h3>
       </div>
       <div className="flex flex-wrap gap-3">
-        {skill.tech.map((tech) => (
+        {skill.tech.map(tech => (
           <motion.span
             key={tech.name}
             initial={{ opacity: 0, scale: 0 }}
@@ -32,9 +32,8 @@ export function SkillCard({ skill }: { skill: Skill }) {
           >
             {tech.icon && <tech.icon className="w-4 h-4" />} {tech.name}
           </motion.span>
-
         ))}
       </div>
     </motion.div>
-  )
+  );
 }

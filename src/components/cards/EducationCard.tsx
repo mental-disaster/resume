@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
-import { Education } from '@/data/education'
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
+import { Education } from '@/data/education';
 
 export const EducationCard = ({ education }: { education: Education }) => {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.3 })
-  const Icon = education.icon
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.3 });
+  const Icon = education.icon;
 
   const CardContent = (
     <motion.div
@@ -21,10 +21,10 @@ export const EducationCard = ({ education }: { education: Education }) => {
         <Icon className="w-6 h-6 text-primary" />
         <h3 className="text-xl font-semibold">{education.institution}</h3>
       </div>
-      <p className="text-gray text-sm mb-1">{education.activity}</p>
-      <p className="text-gray text-xs">{education.period}</p>
+      <p className="text-grey text-sm mb-1">{education.activity}</p>
+      <p className="text-grey text-xs">{education.period}</p>
     </motion.div>
-  )
+  );
 
   return education.link ? (
     <a href={education.link} target="_blank" rel="noopener noreferrer">
@@ -32,5 +32,5 @@ export const EducationCard = ({ education }: { education: Education }) => {
     </a>
   ) : (
     CardContent
-  )
-}
+  );
+};

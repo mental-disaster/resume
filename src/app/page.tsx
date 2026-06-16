@@ -1,8 +1,5 @@
-'use client';
-
 import About from '@/components/none-styled/About';
 import Experience from '@/components/none-styled/Experience';
-import Projects from '@/components/none-styled/Projects';
 import Achievements from '@/components/none-styled/Achievements';
 import Education from '@/components/none-styled/Education';
 import Header from '@/components/none-styled/Header';
@@ -18,7 +15,6 @@ export default function Home() {
           <main className="space-y-8 sm:space-y-10">
             <About />
             <Experience />
-            <Projects />
             <Achievements />
             <Education />
             <Skills />

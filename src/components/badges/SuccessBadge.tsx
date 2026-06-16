@@ -1,12 +1,6 @@
 import clsx from 'clsx';
 
-export const SuccessBadge = ({
-  label,
-  className,
-}: {
-  label: string;
-  className?: string;
-}) => {
+export const SuccessBadge = ({ label, className }: { label: string; className?: string }) => {
   return (
     <span
       className={clsx(

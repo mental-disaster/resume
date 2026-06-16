@@ -9,7 +9,7 @@ export default function Header() {
         <div className="flex-1">
           <h1 className="text-2xl sm:text-3xl font-bold mb-2">{heroData.name}</h1>
           <h2 className="text-lg sm:text-xl mb-3">{heroData.title}</h2>
-          <p className="text-gray text-sm leading-relaxed max-w-2xl">{heroData.description}</p>
+          <p className="text-grey text-sm leading-relaxed max-w-2xl">{heroData.description}</p>
         </div>
         <div className="text-left md:text-right text-sm space-y-1">
           <div className="flex items-center gap-2">
@@ -27,7 +27,7 @@ export default function Header() {
                 href={social.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-gray break-all"
+                className="hover:text-grey break-all"
               >
                 {social.url.replace(/^https?:\/\//, '').replace(/^www\./, '')}
               </a>
