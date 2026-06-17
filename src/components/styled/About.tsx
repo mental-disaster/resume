@@ -1,32 +1,19 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
-import { useRef } from 'react';
 import { aboutData } from '@/data/about';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 export default function About() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const { ref, reveal } = useScrollReveal();
 
   return (
     <section id="about" className="py-20 bg-gradient-to-b from-white via-sub/10 to-white">
       <div className="container mx-auto px-4">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : undefined}
-          transition={{ duration: 0.5 }}
-          className="text-3xl font-bold text-center mb-12"
-        >
+        <motion.h2 {...reveal()} className="text-3xl font-bold text-center mb-12">
           {aboutData.title}
         </motion.h2>
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="max-w-3xl mx-auto"
-        >
+        <motion.div ref={ref} {...reveal({ delay: 0.2 })} className="max-w-3xl mx-auto">
           <div className="text-grey text-lg mb-6 space-y-4">
             {aboutData.description.map((paragraph, index) => (
               <p key={index} className="leading-7 break-words whitespace-pre-line">
@@ -38,9 +25,7 @@ export default function About() {
           <div className="grid grid-cols-2 gap-4 mt-8">
             <motion.a
               href="#education"
-              initial={{ opacity: 0, x: -20 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
+              {...reveal({ x: -20, y: 0, delay: 0.4 })}
               className="bg-light/30 p-4 rounded-lg"
             >
               <h3 className="font-semibold mb-2">교육</h3>
@@ -51,9 +36,7 @@ export default function About() {
             </motion.a>
             <motion.a
               href="#experience"
-              initial={{ opacity: 0, x: 20 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
+              {...reveal({ x: 20, y: 0, delay: 0.4 })}
               className="bg-light/30 p-4 rounded-lg"
             >
               <h3 className="font-semibold mb-2">경력</h3>

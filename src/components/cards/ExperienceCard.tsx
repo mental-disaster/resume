@@ -1,19 +1,20 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
 import Image from 'next/image';
 import { Experience } from '@/data/experience';
 import { ExperienceModal } from '@/components/modals/ExperienceModal';
 import { PrimaryBadge } from '@/components/badges/PrimaryBadge';
 import { SuccessBadge } from '@/components/badges/SuccessBadge';
 import { Utils } from '@/components/common/Utils';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
-export const ExperienceCard = ({ exp, now }: { exp: Experience; now?: Date }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.3 });
+export const ExperienceCard = ({ exp, now }: { exp: Experience; now?: Date | null }) => {
+  const { ref, reveal } = useScrollReveal(0.3);
   const [isModalOpen, setModalOpen] = useState(false);
   const Icon = exp.icon;
+  const duration = Utils.formatDuration(exp.startedAt, exp.endedAt, now);
 
   const openModal = () => setModalOpen(true);
 
@@ -32,9 +33,7 @@ export const ExperienceCard = ({ exp, now }: { exp: Experience; now?: Date }) =>
         tabIndex={0}
         aria-haspopup="dialog"
         aria-label={`${exp.company} 경력 상세 보기`}
-        initial={{ opacity: 0, y: 40 }}
-        animate={isInView ? { opacity: 1, y: 0 } : undefined}
-        transition={{ duration: 0.6 }}
+        {...reveal({ y: 40, duration: 0.6 })}
         className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow group relative cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
         <div className="absolute rounded-xl inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 flex items-center justify-center">
@@ -65,10 +64,7 @@ export const ExperienceCard = ({ exp, now }: { exp: Experience; now?: Date }) =>
           <h3 className="text-2xl font-bold mb-2 flex items-center">
             {exp.company}
             {exp.endedAt ? '' : <PrimaryBadge className="ml-1" label={'재직중'} />}
-            <SuccessBadge
-              className="ml-1 text-dark"
-              label={Utils.formatDuration(exp.startedAt, exp.endedAt, now)}
-            />
+            {duration && <SuccessBadge className="ml-1 text-dark" label={duration} />}
           </h3>
           <p className="text-dark text-lg font-semibold mb-2">{exp.position}</p>
           <p className="text-grey/50 mb-4">

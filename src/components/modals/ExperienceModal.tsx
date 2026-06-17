@@ -14,11 +14,12 @@ export const ExperienceModal = ({
   onClose,
 }: {
   exp: Experience;
-  now?: Date;
+  now?: Date | null;
   onClose: () => void;
 }) => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
+  const duration = Utils.formatDuration(exp.startedAt, exp.endedAt, now);
 
   // 배경 스크롤 잠금 + 스크롤 위치 복원
   useEffect(() => {
@@ -110,10 +111,7 @@ export const ExperienceModal = ({
           <p className="text-dark text-lg font-semibold mb-2 flex items-center">
             {exp.position}
             {exp.endedAt ? '' : <PrimaryBadge className="ml-1" label={'재직중'} />}
-            <SuccessBadge
-              className="ml-1"
-              label={Utils.formatDuration(exp.startedAt, exp.endedAt, now)}
-            />
+            {duration && <SuccessBadge className="ml-1" label={duration} />}
           </p>
           <p className="text-grey/50 mb-4">
             {exp.startedAt} - {exp.endedAt ? exp.endedAt : '현재'}

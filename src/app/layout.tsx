@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 
+import { MotionConfig } from 'framer-motion';
 import { ReactLenis } from 'lenis/react';
 import FloatingButton from '@/components/common/FloatingButton';
 
@@ -17,8 +18,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="antialiased">
-        <ReactLenis root>{children}</ReactLenis>
-        <FloatingButton />
+        <MotionConfig reducedMotion="user">
+          <ReactLenis root>{children}</ReactLenis>
+          <FloatingButton />
+        </MotionConfig>
       </body>
     </html>
   );

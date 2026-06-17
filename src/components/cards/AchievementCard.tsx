@@ -1,21 +1,18 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
 import { Achievement } from '@/data/achievements';
 import Image from 'next/image';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 export const AchievementCard = ({ achievement }: { achievement: Achievement }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.3 });
+  const { ref, reveal } = useScrollReveal(0.3);
   const Icon = achievement.icon;
 
   const CardContent = (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : undefined}
-      transition={{ duration: 0.6 }}
+      {...reveal({ duration: 0.6 })}
       className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow group relative"
     >
       {achievement.image && (

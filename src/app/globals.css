@@ -2,25 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --color-primary: #1e90ff;
-  --color-secondary: #4682b4;
-  --color-accent: #00bfff;
-  --color-light: #00d6fa;
-  --color-dark: #106fc7;
-  --color-black: #2b2b2b;
-  --color-white: #ffffff;
-  --color-grey: #2a425b;
-  --color-sub: #7cd0ff;
-
-  --color-success: #00c9a7;
-  --color-warning: #ffb86c;
-  --color-error: #ff5555;
-  --color-info: #8be9fd;
-}
-
 @font-face {
   font-family: 'GCT';
   src: url('/fonts/GCT_Light.woff') format('woff');

@@ -21,12 +21,15 @@ function formatMonths(totalMonths: number): string {
 }
 
 export const Utils = {
-  // 기준 날짜(now)는 호출부에서 주입해 SSR/CSR 및 카드 간 표시가 어긋나지 않도록 한다.
-  formatDuration(startedAt: string, endedAt?: string, now: Date = new Date()): string {
+  // 기준 날짜(now)는 호출부에서 주입해 카드 간 표시가 어긋나지 않도록 한다.
+  // now가 아직 없으면(클라이언트 마운트 전) 빈 문자열을 반환해 하이드레이션 불일치를 피한다.
+  formatDuration(startedAt: string, endedAt?: string, now?: Date | null): string {
+    if (!now) return '';
     return formatMonths(diffInMonths(startedAt, endedAt, now));
   },
 
-  getTotalCareerDuration(experiences: Experience[], now: Date = new Date()): string {
+  getTotalCareerDuration(experiences: Experience[], now?: Date | null): string {
+    if (!now) return '';
     const totalMonths = experiences.reduce(
       (sum, exp) => sum + diffInMonths(exp.startedAt, exp.endedAt, now),
       0

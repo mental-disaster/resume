@@ -1,20 +1,17 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
 import { Skill } from '@/data/skills';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 export function SkillCard({ skill }: { skill: Skill }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.3 });
+  const { ref, isInView, reveal } = useScrollReveal(0.3);
   const Icon = skill.icon;
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : undefined}
-      transition={{ duration: 0.6 }}
+      {...reveal({ duration: 0.6 })}
       className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow"
     >
       <div className="flex items-center gap-3 mb-4">
