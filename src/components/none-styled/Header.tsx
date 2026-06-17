@@ -1,6 +1,6 @@
 import { contactData } from '@/data/contact';
 import { heroData } from '@/data/hero';
-import { IconMail, IconPhone } from '@tabler/icons-react';
+import { IconMail } from '@tabler/icons-react';
 
 export default function Header() {
   return (
@@ -15,10 +15,6 @@ export default function Header() {
           <div className="flex items-center gap-2">
             <IconMail size={16} />
             <span className="break-all">{contactData.email.value}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <IconPhone size={16} />
-            <span>{contactData.phone.value}</span>
           </div>
           {contactData.social.map((social, index) => (
             <div key={index} className="flex items-center gap-2">
