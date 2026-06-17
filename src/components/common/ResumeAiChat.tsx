@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useId, useRef, useState } from 'react';
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import {
   IconAlertCircle,
@@ -67,17 +67,11 @@ export default function ResumeAiChat() {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
   const [hasLoadedCachedMessages, setHasLoadedCachedMessages] = useState(false);
-  const panelRef = useRef<HTMLElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const titleId = useId();
   const hasStartedConversation = messages.some(message => message.role === 'user');
-
-  const scrollMessagesBy = (deltaY: number) => {
-    const messagesElement = messagesRef.current;
-    if (!messagesElement) return;
-
-    messagesElement.scrollTop += deltaY;
-  };
 
   useEffect(() => {
     const cachedMessages = parseCachedMessages(sessionStorage.getItem(SESSION_STORAGE_KEY));
@@ -98,8 +92,13 @@ export default function ResumeAiChat() {
   useEffect(() => {
     if (!isOpen) return;
 
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    const fallbackFocusElement = triggerRef.current;
+    inputRef.current?.focus({ preventScroll: true });
+
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
+        event.preventDefault();
         setIsOpen(false);
       }
     };
@@ -108,57 +107,12 @@ export default function ResumeAiChat() {
 
     return () => {
       window.removeEventListener('keydown', closeOnEscape);
-    };
-  }, [isOpen]);
 
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const panelElement = panelRef.current;
-    if (!panelElement) return;
-
-    let touchStartY: number | null = null;
-
-    const handleWheel = (event: WheelEvent) => {
-      event.preventDefault();
-      event.stopPropagation();
-
-      const deltaMultiplier =
-        event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1;
-
-      scrollMessagesBy(event.deltaY * deltaMultiplier);
-    };
-
-    const handleTouchStart = (event: TouchEvent) => {
-      touchStartY = event.touches[0]?.clientY ?? null;
-    };
-
-    const handleTouchMove = (event: TouchEvent) => {
-      const currentY = event.touches[0]?.clientY;
-      if (touchStartY === null || currentY === undefined) return;
-
-      event.preventDefault();
-      event.stopPropagation();
-      scrollMessagesBy(touchStartY - currentY);
-      touchStartY = currentY;
-    };
-
-    const clearTouchStart = () => {
-      touchStartY = null;
-    };
-
-    panelElement.addEventListener('wheel', handleWheel, { passive: false });
-    panelElement.addEventListener('touchstart', handleTouchStart, { passive: true });
-    panelElement.addEventListener('touchmove', handleTouchMove, { passive: false });
-    panelElement.addEventListener('touchend', clearTouchStart);
-    panelElement.addEventListener('touchcancel', clearTouchStart);
-
-    return () => {
-      panelElement.removeEventListener('wheel', handleWheel);
-      panelElement.removeEventListener('touchstart', handleTouchStart);
-      panelElement.removeEventListener('touchmove', handleTouchMove);
-      panelElement.removeEventListener('touchend', clearTouchStart);
-      panelElement.removeEventListener('touchcancel', clearTouchStart);
+      if (previouslyFocused?.isConnected) {
+        previouslyFocused.focus();
+      } else {
+        fallbackFocusElement?.focus();
+      }
     };
   }, [isOpen]);
 
@@ -223,17 +177,15 @@ export default function ResumeAiChat() {
           />
 
           <section
-            ref={panelRef}
             id="resume-ai-chat"
             role="dialog"
-            aria-modal="true"
-            aria-label="Ask about this resume"
+            aria-labelledby={titleId}
             className="fixed inset-x-3 bottom-3 z-[60] flex h-[calc(100dvh-1.5rem)] flex-col overflow-hidden overscroll-contain rounded-2xl border border-slate-200 bg-white shadow-2xl sm:inset-x-auto sm:bottom-6 sm:right-20 sm:h-[min(620px,calc(100dvh-3rem))] sm:w-[390px]"
             data-lenis-prevent
           >
             <header className="flex shrink-0 items-start justify-between gap-3 border-b border-slate-100 bg-slate-50 px-4 py-3">
               <div>
-                <div className="flex items-center gap-2 text-sm font-bold text-grey">
+                <div id={titleId} className="flex items-center gap-2 text-sm font-bold text-grey">
                   <IconSparkles className="h-4 w-4 text-primary" />
                   Ask about this resume
                 </div>
@@ -253,7 +205,8 @@ export default function ResumeAiChat() {
 
             <div
               ref={messagesRef}
-              className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-3"
+              className="min-h-0 flex-1 touch-pan-y overflow-y-auto overscroll-contain px-4 py-3"
+              data-lenis-prevent
             >
               <div className="space-y-3">
                 {messages.map(message => (
@@ -346,6 +299,7 @@ export default function ResumeAiChat() {
       )}
 
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setIsOpen(current => !current)}
         className="flex h-8 w-8 items-center justify-center rounded-full bg-grey/90 shadow-lg transition-all duration-300 hover:bg-grey hover:shadow-xl sm:h-10 sm:w-10"
