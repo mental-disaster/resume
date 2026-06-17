@@ -125,7 +125,7 @@ export const ExperienceModal = ({
           </div>
 
           {/* 프로젝트 목록 */}
-          {exp.projects && exp.projects.length > 0 && (
+          {exp.projects.length > 0 && (
             <div className="mt-6">
               <h3 className="text-lg font-semibold mb-4">주요 프로젝트</h3>
               <div className="space-y-4">

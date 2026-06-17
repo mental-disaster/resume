@@ -10,7 +10,6 @@ import {
   IconBrandPython,
   IconHtml,
 } from '@tabler/icons-react';
-import React from 'react';
 
 export interface Skill {
   category: string;

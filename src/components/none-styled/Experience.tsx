@@ -18,7 +18,7 @@ export default function Experience() {
           </div>
 
           {/* 프로젝트 목록 */}
-          {exp.projects && exp.projects.length > 0 && (
+          {exp.projects.length > 0 && (
             <div className="space-y-4">
               {exp.projects.map((project, idx) => (
                 <div key={idx} className="p-4">
