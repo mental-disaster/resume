@@ -57,6 +57,7 @@ const INITIAL_MESSAGES: ChatMessage[] = [
 
 const LEGACY_SESSION_STORAGE_KEY = 'resume-ai-chat-messages';
 const ENTRY_HINT_FADE_DURATION_MS = 220;
+const ENTRY_HINT_OUTSIDE_DISMISS_DELAY_MS = 3_000;
 const LONG_PARAGRAPH_LENGTH = 180;
 const MESSAGE_SENTENCE_PATTERN = /(?<=[.!?。！？])\s+/;
 const MESSAGE_STRONG_PATTERN = /(\*\*[^*\n]+?\*\*)/g;
@@ -238,6 +239,7 @@ export default function ResumeAiChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [isEntryHintMounted, setIsEntryHintMounted] = useState(false);
   const [isEntryHintVisible, setIsEntryHintVisible] = useState(false);
+  const [isEntryHintOutsideDismissable, setIsEntryHintOutsideDismissable] = useState(false);
   const [hasPromptedEntryHint, setHasPromptedEntryHint] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
@@ -303,7 +305,22 @@ export default function ResumeAiChat() {
   }, [isEntryHintVisible]);
 
   useEffect(() => {
-    if (!isEntryHintVisible) return;
+    if (!isEntryHintVisible) {
+      setIsEntryHintOutsideDismissable(false);
+      return;
+    }
+
+    const graceTimerId = window.setTimeout(() => {
+      setIsEntryHintOutsideDismissable(true);
+    }, ENTRY_HINT_OUTSIDE_DISMISS_DELAY_MS);
+
+    return () => {
+      window.clearTimeout(graceTimerId);
+    };
+  }, [isEntryHintVisible]);
+
+  useEffect(() => {
+    if (!isEntryHintVisible || !isEntryHintOutsideDismissable) return;
 
     const closeOnOutsidePointerDown = (event: PointerEvent) => {
       const target = event.target;
@@ -320,7 +337,7 @@ export default function ResumeAiChat() {
     return () => {
       window.removeEventListener('pointerdown', closeOnOutsidePointerDown, true);
     };
-  }, [isEntryHintVisible]);
+  }, [isEntryHintVisible, isEntryHintOutsideDismissable]);
 
   useEffect(() => {
     if (isOpen) {
