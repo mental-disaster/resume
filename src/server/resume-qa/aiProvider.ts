@@ -11,6 +11,7 @@ import {
   type ResumeQaRequest,
   type ResumeQaSourceLabel,
 } from '@/types/resumeQa';
+import { normalizeResumeQaAnswerText } from '@/utils/resumeQaFormatting';
 
 import { geminiResumeQaProvider } from './gemini';
 import {
@@ -44,6 +45,30 @@ const modelOutputSchema = {
     answer: {
       type: 'string',
     },
+    answerBlocks: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          type: {
+            type: 'string',
+            enum: ['paragraph', 'bullet_list'],
+          },
+          text: {
+            type: 'string',
+          },
+          items: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+            maxItems: 5,
+          },
+        },
+        required: ['type'],
+      },
+      maxItems: 6,
+    },
     sourceIds: {
       type: 'array',
       items: {
@@ -53,7 +78,7 @@ const modelOutputSchema = {
       maxItems: RESUME_QA_MAX_SOURCES,
     },
   },
-  required: ['questionScope', 'answerable', 'answer', 'sourceIds'],
+  required: ['questionScope', 'answerable', 'answer', 'answerBlocks', 'sourceIds'],
 } as const;
 
 const resumeQaProviders = {
@@ -71,8 +96,29 @@ const getResumeQaProvider = () => {
   return provider;
 };
 
+const stripBoundaryQuotes = (value: string) => {
+  const trimmedValue = value.trim();
+  const firstCharacter = trimmedValue.at(0);
+  const lastCharacter = trimmedValue.at(-1);
+
+  if (
+    (firstCharacter === '"' || firstCharacter === "'" || firstCharacter === '`') &&
+    firstCharacter === lastCharacter
+  ) {
+    return trimmedValue.slice(1, -1).trim();
+  }
+
+  return trimmedValue;
+};
+
+const normalizeSystemInstruction = (value: string) =>
+  stripBoundaryQuotes(value)
+    .replaceAll(String.raw`\r\n`, '\n')
+    .replaceAll(String.raw`\n`, '\n');
+
 const getSystemInstruction = () => {
-  const instruction = process.env[SYSTEM_INSTRUCTION_ENV]?.trim();
+  const rawInstruction = process.env[SYSTEM_INSTRUCTION_ENV];
+  const instruction = rawInstruction ? normalizeSystemInstruction(rawInstruction) : '';
 
   if (!instruction) {
     throw new ResumeQaProviderConfigError(`${SYSTEM_INSTRUCTION_ENV} is required.`);
@@ -88,6 +134,7 @@ const serializeCareerDataForPrompt = () =>
       title: item.title,
       visibility: item.visibility,
       sourceType: item.sourceType,
+      resumePlacement: item.resumePlacement,
       kind: item.kind,
       sourceUrl: item.sourceUrl,
       sourceDescription: item.sourceDescription,
@@ -183,6 +230,28 @@ const createRefusalResponse = (): ResumeQaAnswerResponse => ({
   sources: [],
 });
 
+const isNonEmptyText = (value: string | null): value is string => Boolean(value);
+
+const formatAnswerBlocks = (modelOutput: ResumeQaModelOutput) => {
+  const blockAnswer = modelOutput.answerBlocks
+    .map(block => {
+      if (block.type === 'paragraph') {
+        return block.text?.trim() || null;
+      }
+
+      const items = (block.items ?? []).map(item => item.trim()).filter(Boolean);
+
+      if (items.length === 0) return null;
+
+      return items.map(item => `- ${item}`).join('\n');
+    })
+    .filter(isNonEmptyText)
+    .join('\n\n')
+    .trim();
+
+  return blockAnswer || modelOutput.answer.trim();
+};
+
 const mapModelOutputToApiResponse = (modelOutput: ResumeQaModelOutput): ResumeQaAnswerResponse => {
   if (modelOutput.questionScope === 'out_of_scope') {
     return createRefusalResponse();
@@ -192,7 +261,9 @@ const mapModelOutputToApiResponse = (modelOutput: ResumeQaModelOutput): ResumeQa
     return createUnsupportedResponse();
   }
 
-  const answer = replaceSourceIdsWithTitles(modelOutput.answer.trim());
+  const answer = normalizeResumeQaAnswerText(
+    replaceSourceIdsWithTitles(formatAnswerBlocks(modelOutput))
+  );
 
   if (!answer || answer.length > RESUME_QA_MAX_ANSWER_LENGTH || hasLeakPattern(answer)) {
     return createRefusalResponse();

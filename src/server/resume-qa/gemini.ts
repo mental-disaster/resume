@@ -7,10 +7,12 @@ import {
   type ResumeQaProvider,
 } from './provider';
 
-const DEFAULT_GEMINI_MODEL = 'gemini-2.5-flash-lite';
+const DEFAULT_GEMINI_MODEL = 'gemini-3.1-flash-lite';
 const DEFAULT_GEMINI_API_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
 const GEMINI_TIMEOUT_MS = 15_000;
-const GEMINI_MAX_OUTPUT_TOKENS = 2048;
+const GEMINI_THINKING_LEVELS = ['minimal', 'low', 'medium', 'high'] as const;
+
+type GeminiThinkingLevel = (typeof GEMINI_THINKING_LEVELS)[number];
 
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -30,6 +32,74 @@ const getGeminiModel = () =>
 
 const getGeminiApiBaseUrl = () =>
   (process.env.GEMINI_API_BASE_URL || DEFAULT_GEMINI_API_BASE_URL).replace(/\/$/, '');
+
+const getOptionalNumberEnv = (envName: string) => {
+  const rawValue = process.env[envName]?.trim();
+  if (!rawValue) return undefined;
+
+  const value = Number(rawValue);
+
+  if (!Number.isFinite(value)) {
+    throw new ResumeQaProviderConfigError(`${envName} must be a finite number.`);
+  }
+
+  return value;
+};
+
+const getGeminiMaxOutputTokens = () => {
+  const maxOutputTokens = getOptionalNumberEnv('GEMINI_MAX_OUTPUT_TOKENS');
+
+  if (maxOutputTokens === undefined) return undefined;
+
+  if (!Number.isInteger(maxOutputTokens) || maxOutputTokens <= 0) {
+    throw new ResumeQaProviderConfigError('GEMINI_MAX_OUTPUT_TOKENS must be a positive integer.');
+  }
+
+  return maxOutputTokens;
+};
+
+const getGeminiTemperature = () => {
+  const temperature = getOptionalNumberEnv('GEMINI_TEMPERATURE');
+
+  if (temperature === undefined) return undefined;
+
+  if (temperature < 0 || temperature > 2) {
+    throw new ResumeQaProviderConfigError('GEMINI_TEMPERATURE must be between 0 and 2.');
+  }
+
+  return temperature;
+};
+
+const isGeminiThinkingLevel = (value: string): value is GeminiThinkingLevel =>
+  GEMINI_THINKING_LEVELS.includes(value as GeminiThinkingLevel);
+
+const getGeminiThinkingLevel = () => {
+  const thinkingLevel = process.env.GEMINI_THINKING_LEVEL?.trim();
+
+  if (!thinkingLevel) return undefined;
+
+  if (!isGeminiThinkingLevel(thinkingLevel)) {
+    throw new ResumeQaProviderConfigError(
+      `GEMINI_THINKING_LEVEL must be one of: ${GEMINI_THINKING_LEVELS.join(', ')}.`
+    );
+  }
+
+  return thinkingLevel;
+};
+
+const buildGeminiGenerationConfig = (responseSchema: unknown) => {
+  const maxOutputTokens = getGeminiMaxOutputTokens();
+  const temperature = getGeminiTemperature();
+  const thinkingLevel = getGeminiThinkingLevel();
+
+  return {
+    ...(temperature !== undefined ? { temperature } : {}),
+    ...(maxOutputTokens !== undefined ? { maxOutputTokens } : {}),
+    responseMimeType: 'application/json',
+    responseSchema,
+    ...(thinkingLevel ? { thinkingConfig: { thinkingLevel } } : {}),
+  };
+};
 
 const extractTextFromGeminiResponse = (value: unknown) => {
   if (!isPlainObject(value) || !Array.isArray(value.candidates)) {
@@ -83,12 +153,7 @@ export const geminiResumeQaProvider: ResumeQaProvider = {
               parts: [{ text: prompt }],
             },
           ],
-          generationConfig: {
-            temperature: 0.2,
-            maxOutputTokens: GEMINI_MAX_OUTPUT_TOKENS,
-            responseMimeType: 'application/json',
-            responseSchema,
-          },
+          generationConfig: buildGeminiGenerationConfig(responseSchema),
         }),
         signal: controller.signal,
       });

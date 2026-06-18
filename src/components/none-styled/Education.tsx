@@ -1,7 +1,5 @@
 import { education } from '@/data/education';
-
-const SECTION_TITLE_CLASS =
-  'mb-3 border-b border-slate-300 pb-1 text-sm font-bold uppercase tracking-normal text-slate-950';
+import { SECTION_TITLE_CLASS } from '@/components/none-styled/styles';
 
 export default function Education() {
   return (

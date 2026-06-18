@@ -1,6 +1,6 @@
 import 'server-only';
 
-import type { ResumeQaModelOutput } from '@/types/resumeQa';
+import type { ResumeQaAnswerBlock, ResumeQaModelOutput } from '@/types/resumeQa';
 
 export interface ResumeQaProviderRequest {
   systemInstruction: string;
@@ -42,6 +42,18 @@ const isStringArray = (value: unknown): value is string[] =>
 
 const isResumeQaQuestionScope = (value: unknown) => value === 'resume' || value === 'out_of_scope';
 
+const isResumeQaAnswerBlockType = (value: unknown) =>
+  value === 'paragraph' || value === 'bullet_list';
+
+const isResumeQaAnswerBlock = (value: unknown): value is ResumeQaAnswerBlock => {
+  if (!isPlainObject(value) || !isResumeQaAnswerBlockType(value.type)) return false;
+
+  return (
+    (value.text === undefined || typeof value.text === 'string') &&
+    (value.items === undefined || isStringArray(value.items))
+  );
+};
+
 const isResumeQaModelOutput = (value: unknown): value is ResumeQaModelOutput => {
   if (!isPlainObject(value)) return false;
 
@@ -49,6 +61,8 @@ const isResumeQaModelOutput = (value: unknown): value is ResumeQaModelOutput => 
     isResumeQaQuestionScope(value.questionScope) &&
     typeof value.answerable === 'boolean' &&
     typeof value.answer === 'string' &&
+    Array.isArray(value.answerBlocks) &&
+    value.answerBlocks.every(isResumeQaAnswerBlock) &&
     isStringArray(value.sourceIds)
   );
 };

@@ -22,6 +22,11 @@ import {
   type ResumeQaErrorResponse,
   type ResumeQaSource,
 } from '@/types/resumeQa';
+import {
+  getResumeQaAnswerLines,
+  normalizeResumeQaAnswerText,
+  parseResumeQaListItem,
+} from '@/utils/resumeQaFormatting';
 
 type ChatMessage = {
   id: number;
@@ -34,23 +39,28 @@ type ChatMessage = {
 
 const EXAMPLE_QUESTIONS = [
   '백엔드 경험을 더 자세히 설명해 주세요.',
-  '성능 개선 경험이 있나요?',
-  'PL 역할에서는 무엇을 했나요?',
-  'React/TypeScript도 실무에서 사용했나요?',
+  '성능 개선 경험을 구체적인 수치와 함께 알려주세요.',
+  '업무 외에도 실생활에서 기술을 활용한 경험이 있나요?',
+  '이 AI 챗봇은 어떤 구조로 만들었나요?',
 ];
+
+const INITIAL_ASSISTANT_MESSAGE_CONTENT =
+  '화면에 요약되지 않은 공개 경험도 질문할 수 있어요. 개인 프로젝트, 오픈소스 기여, 문제 해결 사례 등을 함께 참고합니다.';
 
 const INITIAL_MESSAGES: ChatMessage[] = [
   {
     id: 1,
     role: 'assistant',
-    content: '이력서 내용에 대해 궁금한 점을 질문해 주세요.',
+    content: INITIAL_ASSISTANT_MESSAGE_CONTENT,
   },
 ];
 
-const SESSION_STORAGE_KEY = 'resume-ai-chat-messages';
+const LEGACY_SESSION_STORAGE_KEY = 'resume-ai-chat-messages';
+const ENTRY_HINT_FADE_DURATION_MS = 220;
 const LONG_PARAGRAPH_LENGTH = 180;
 const MESSAGE_SENTENCE_PATTERN = /(?<=[.!?。！？])\s+/;
-const MESSAGE_LIST_ITEM_PATTERN = /^([-*•]|\d+[.)]|[ivxlcdm]+[.)])\s+(.+)$/;
+const MESSAGE_STRONG_PATTERN = /(\*\*[^*\n]+?\*\*)/g;
+const MESSAGE_STRONG_PART_PATTERN = /^\*\*[^*\n]+?\*\*$/;
 
 const createMessageId = () => Date.now() + Math.random();
 
@@ -70,47 +80,6 @@ const isResumeQaSource = (value: unknown): value is ResumeQaSource => {
     (value.sourceUrl === undefined || typeof value.sourceUrl === 'string') &&
     (value.sourceDescription === undefined || typeof value.sourceDescription === 'string')
   );
-};
-
-const isChatMessage = (value: unknown): value is ChatMessage => {
-  if (!isPlainObject(value)) return false;
-
-  const message = value as Partial<ChatMessage>;
-
-  return (
-    typeof message.id === 'number' &&
-    (message.role === 'user' || message.role === 'assistant') &&
-    typeof message.content === 'string' &&
-    (message.sources === undefined ||
-      (Array.isArray(message.sources) && message.sources.every(isResumeQaSource))) &&
-    (message.isLoading === undefined || typeof message.isLoading === 'boolean') &&
-    (message.isError === undefined || typeof message.isError === 'boolean')
-  );
-};
-
-const parseCachedMessages = (cachedValue: string | null): ChatMessage[] | null => {
-  if (!cachedValue) return null;
-
-  try {
-    const parsedValue: unknown = JSON.parse(cachedValue);
-
-    if (!Array.isArray(parsedValue) || parsedValue.length === 0) {
-      return null;
-    }
-
-    if (!parsedValue.every(isChatMessage)) return null;
-
-    return parsedValue.map(({ id, role, content, sources, isLoading, isError }) => ({
-      id,
-      role,
-      content,
-      ...(sources ? { sources } : {}),
-      ...(isLoading ? { isLoading } : {}),
-      ...(isError ? { isError } : {}),
-    }));
-  } catch {
-    return null;
-  }
 };
 
 const isResumeQaAnswerResponse = (value: unknown): value is ResumeQaAnswerResponse => {
@@ -182,45 +151,73 @@ const getReadableParagraphs = (content: string) =>
     .flatMap(paragraph => splitLongParagraph(paragraph.trim()))
     .filter(Boolean);
 
+const renderInlineMessageContent = (text: string) =>
+  text.split(MESSAGE_STRONG_PATTERN).map((part, partIndex) => {
+    if (MESSAGE_STRONG_PART_PATTERN.test(part)) {
+      return <strong key={`strong-${partIndex}`}>{part.slice(2, -2)}</strong>;
+    }
+
+    return part;
+  });
+
 const renderMessageContent = (message: ChatMessage) => {
   if (message.isLoading) {
     return <div className="animate-pulse">{message.content}</div>;
   }
 
-  const lines = message.content
-    .trim()
-    .split('\n')
-    .map(line => line.trim())
-    .filter(Boolean);
-  const hasListItems = lines.some(line => MESSAGE_LIST_ITEM_PATTERN.test(line));
+  const normalizedContent = normalizeResumeQaAnswerText(message.content);
+  const lines = getResumeQaAnswerLines(normalizedContent);
+  const hasListItems = lines.some(line => parseResumeQaListItem(line));
 
   if (hasListItems) {
     const contentBlocks: ReactNode[] = [];
     let listItems: string[] = [];
+    let listType: 'ordered' | 'unordered' | null = null;
 
     const flushListItems = () => {
-      if (listItems.length === 0) return;
+      if (listItems.length === 0 || listType === null) return;
 
-      contentBlocks.push(
-        <ul key={`list-${contentBlocks.length}`} className="ml-4 list-disc space-y-1">
-          {listItems.map((item, itemIndex) => (
-            <li key={`item-${itemIndex}`}>{item}</li>
-          ))}
-        </ul>
-      );
+      if (listType === 'ordered') {
+        contentBlocks.push(
+          <ol key={`list-${contentBlocks.length}`} className="ml-5 list-decimal space-y-1">
+            {listItems.map((item, itemIndex) => (
+              <li key={`item-${itemIndex}`}>{renderInlineMessageContent(item)}</li>
+            ))}
+          </ol>
+        );
+      } else {
+        contentBlocks.push(
+          <ul key={`list-${contentBlocks.length}`} className="ml-4 list-disc space-y-1">
+            {listItems.map((item, itemIndex) => (
+              <li key={`item-${itemIndex}`}>{renderInlineMessageContent(item)}</li>
+            ))}
+          </ul>
+        );
+      }
+
       listItems = [];
+      listType = null;
     };
 
     lines.forEach(line => {
-      const listItemMatch = line.match(MESSAGE_LIST_ITEM_PATTERN);
+      const listItem = parseResumeQaListItem(line);
 
-      if (listItemMatch) {
-        listItems.push(listItemMatch[2]);
+      if (listItem) {
+        const nextListType = listItem.isOrdered ? 'ordered' : 'unordered';
+
+        if (listType !== null && listType !== nextListType) {
+          flushListItems();
+        }
+
+        listType = nextListType;
+        listItems.push(listItem.text);
         return;
       }
 
       flushListItems();
-      contentBlocks.push(<p key={`paragraph-${contentBlocks.length}`}>{line}</p>);
+      contentBlocks.push(
+        <p key={`paragraph-${contentBlocks.length}`}>{renderInlineMessageContent(line)}</p>
+      );
     });
 
     flushListItems();
@@ -230,8 +227,8 @@ const renderMessageContent = (message: ChatMessage) => {
 
   return (
     <div className="space-y-2 whitespace-normal">
-      {getReadableParagraphs(message.content).map((paragraph, paragraphIndex) => (
-        <p key={`paragraph-${paragraphIndex}`}>{paragraph}</p>
+      {getReadableParagraphs(normalizedContent).map((paragraph, paragraphIndex) => (
+        <p key={`paragraph-${paragraphIndex}`}>{renderInlineMessageContent(paragraph)}</p>
       ))}
     </div>
   );
@@ -239,11 +236,11 @@ const renderMessageContent = (message: ChatMessage) => {
 
 export default function ResumeAiChat() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isEntryHintMounted, setIsEntryHintMounted] = useState(false);
   const [isEntryHintVisible, setIsEntryHintVisible] = useState(false);
   const [hasPromptedEntryHint, setHasPromptedEntryHint] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
-  const [hasLoadedCachedMessages, setHasLoadedCachedMessages] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const messagesRef = useRef<HTMLDivElement>(null);
   const entryHintRef = useRef<HTMLDivElement>(null);
@@ -256,38 +253,42 @@ export default function ResumeAiChat() {
   const hasStartedConversation = messages.some(message => message.role === 'user');
 
   useEffect(() => {
-    const cachedMessages = parseCachedMessages(sessionStorage.getItem(SESSION_STORAGE_KEY));
-
-    if (cachedMessages) {
-      setMessages(cachedMessages);
-    }
-
-    setHasLoadedCachedMessages(true);
+    sessionStorage.removeItem(LEGACY_SESSION_STORAGE_KEY);
   }, []);
 
   useEffect(() => {
-    if (!hasLoadedCachedMessages) return;
-
-    sessionStorage.setItem(
-      SESSION_STORAGE_KEY,
-      JSON.stringify(messages.filter(message => !message.isLoading))
-    );
-  }, [hasLoadedCachedMessages, messages]);
-
-  useEffect(() => {
-    if (!hasLoadedCachedMessages || isOpen || hasPromptedEntryHint) {
+    if (isOpen || hasPromptedEntryHint) {
       return;
     }
 
+    let animationFrameId: number | null = null;
     const showTimerId = window.setTimeout(() => {
-      setIsEntryHintVisible(true);
-      setHasPromptedEntryHint(true);
+      setIsEntryHintMounted(true);
+      animationFrameId = window.requestAnimationFrame(() => {
+        setIsEntryHintVisible(true);
+        setHasPromptedEntryHint(true);
+      });
     }, 700);
 
     return () => {
       window.clearTimeout(showTimerId);
+      if (animationFrameId !== null) {
+        window.cancelAnimationFrame(animationFrameId);
+      }
     };
-  }, [hasLoadedCachedMessages, hasPromptedEntryHint, isOpen]);
+  }, [hasPromptedEntryHint, isOpen]);
+
+  useEffect(() => {
+    if (isEntryHintVisible || !isEntryHintMounted) return;
+
+    const unmountTimerId = window.setTimeout(() => {
+      setIsEntryHintMounted(false);
+    }, ENTRY_HINT_FADE_DURATION_MS);
+
+    return () => {
+      window.clearTimeout(unmountTimerId);
+    };
+  }, [isEntryHintMounted, isEntryHintVisible]);
 
   useEffect(() => {
     if (!isEntryHintVisible) return;
@@ -617,7 +618,7 @@ export default function ResumeAiChat() {
                                   <a
                                     href={source.sourceUrl}
                                     target="_blank"
-                                    rel="noreferrer"
+                                    rel="noopener noreferrer"
                                     className="font-medium text-grey underline decoration-slate-300 underline-offset-2 transition-colors duration-200 hover:text-primary"
                                   >
                                     {source.title}
@@ -668,7 +669,7 @@ export default function ResumeAiChat() {
                 <div className="mb-2 flex gap-2 rounded-xl bg-sky-50 px-3 py-2 text-xs leading-relaxed text-slate-600">
                   <IconBrandGoogle className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                   <span>
-                    이 웹사이트는 질문 원문을 장기 저장하지 않습니다.
+                    이 웹사이트는 질문 원문을 저장하지 않습니다.
                     <br />
                     다만 입력한 질문은 답변 생성을 위해 외부 AI 제공자인 Google Gemini API로
                     전송됩니다.
@@ -719,11 +720,16 @@ export default function ResumeAiChat() {
       )}
 
       <div className="relative flex justify-end">
-        {isEntryHintVisible && !isOpen && (
+        {isEntryHintMounted && !isOpen && (
           <div
             ref={entryHintRef}
-            className="absolute bottom-0 right-full z-10 mr-3 w-[min(18rem,calc(100vw-5rem))] rounded-xl border border-primary/20 bg-white p-3 text-left shadow-xl shadow-slate-900/10 sm:w-72"
+            className={`absolute bottom-0 right-full z-10 mr-3 w-[min(18rem,calc(100vw-5rem))] rounded-xl border border-primary/20 bg-white p-3 text-left shadow-xl shadow-slate-900/10 transition-all duration-200 ease-out motion-reduce:transition-none sm:w-72 ${
+              isEntryHintVisible
+                ? 'translate-y-0 scale-100 opacity-100'
+                : 'pointer-events-none translate-y-1 scale-95 opacity-0'
+            }`}
             aria-live="polite"
+            aria-hidden={!isEntryHintVisible}
           >
             <div className="flex items-start gap-2">
               <IconSparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
@@ -732,7 +738,7 @@ export default function ResumeAiChat() {
                   이력서 궁금한 점을 AI에게 물어보세요.
                 </span>
                 <span className="mt-1 block text-[11px] leading-relaxed text-slate-500">
-                  경력, 프로젝트, 기술 스택을 바로 질문할 수 있습니다.
+                  요약되지 않은 공개 경험도 함께 참고합니다.
                 </span>
               </button>
               <button

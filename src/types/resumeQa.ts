@@ -37,6 +37,14 @@ export interface ResumeQaAnswerResponse {
   sources: ResumeQaSource[];
 }
 
+export type ResumeQaAnswerBlockType = 'paragraph' | 'bullet_list';
+
+export interface ResumeQaAnswerBlock {
+  type: ResumeQaAnswerBlockType;
+  text?: string;
+  items?: string[];
+}
+
 export type ResumeQaErrorCode =
   | 'invalid_content_type'
   | 'invalid_json'
@@ -61,5 +69,6 @@ export interface ResumeQaModelOutput {
   questionScope: ResumeQaQuestionScope;
   answerable: boolean;
   answer: string;
+  answerBlocks: ResumeQaAnswerBlock[];
   sourceIds: string[];
 }

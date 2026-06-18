@@ -1,3 +1,4 @@
+import { careerSkillGroups } from '@/data/career/core';
 import {
   IconBrandDocker,
   IconBrandReact,
@@ -19,45 +20,24 @@ export interface Technologies {
   name: string;
 }
 
-export const skills: Skill[] = [
-  {
-    category: 'frontend',
-    icon: IconDeviceDesktop,
-    tech: [
-      {
-        icon: IconBrandTypescript,
-        name: 'TypeScript',
-      },
-      {
-        icon: IconBrandReact,
-        name: 'React',
-      },
-    ],
-  },
-  {
-    category: 'backend',
-    icon: IconSettings,
-    tech: [
-      {
-        name: 'Java',
-      },
-      {
-        name: 'Spring Boot',
-      },
-    ],
-  },
-  {
-    category: 'devops',
-    icon: IconInfinity,
-    tech: [
-      {
-        icon: IconBrandGit,
-        name: 'Git',
-      },
-      {
-        icon: IconBrandDocker,
-        name: 'Docker',
-      },
-    ],
-  },
-];
+const SKILL_CATEGORY_ICON_BY_NAME: Record<string, React.ElementType> = {
+  frontend: IconDeviceDesktop,
+  backend: IconSettings,
+  devops: IconInfinity,
+};
+
+const TECH_ICON_BY_NAME: Record<string, React.ElementType | undefined> = {
+  Docker: IconBrandDocker,
+  Git: IconBrandGit,
+  React: IconBrandReact,
+  TypeScript: IconBrandTypescript,
+};
+
+export const skills: Skill[] = careerSkillGroups.map(group => ({
+  category: group.category,
+  icon: SKILL_CATEGORY_ICON_BY_NAME[group.category],
+  tech: group.tech.map(name => ({
+    name,
+    ...(TECH_ICON_BY_NAME[name] ? { icon: TECH_ICON_BY_NAME[name] } : {}),
+  })),
+}));
