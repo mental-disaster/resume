@@ -1,75 +1,74 @@
 import { experience } from '@/data/experience';
 
+const SECTION_TITLE_CLASS =
+  'mb-4 border-b border-slate-300 pb-1 text-sm font-bold uppercase tracking-normal text-slate-950';
+
 export default function Experience() {
   return (
     <section>
-      <h3 className="text-lg sm:text-xl font-bold border-b pb-2 mb-6">경력사항</h3>
+      <h3 className={SECTION_TITLE_CLASS}>경력사항</h3>
       {experience.map((exp, index) => (
-        <div key={index}>
-          <div className="mb-4">
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2">
-              <h4 className="text-lg font-bold">{exp.company}</h4>
-              <span className="text-sm whitespace-nowrap">
-                {exp.startedAt} - {exp.endedAt || '현재'}
-              </span>
+        <article key={index}>
+          <div className="mb-5 grid gap-1 sm:grid-cols-[1fr_auto] sm:items-start sm:gap-4">
+            <div>
+              <h4 className="text-base font-bold text-slate-950">{exp.company}</h4>
+              <p className="mt-1 text-sm font-semibold text-slate-700">{exp.position}</p>
+              {exp.description && (
+                <p className="mt-1 text-sm leading-6 text-slate-600">{exp.description}</p>
+              )}
             </div>
-            <p className="text-base font-semibold mb-1">{exp.position}</p>
-            <p className="text-sm leading-relaxed">{exp.description}</p>
+            <span className="text-sm text-slate-600 sm:text-right">
+              {exp.startedAt} - {exp.endedAt || '현재'}
+            </span>
           </div>
 
-          {/* 프로젝트 목록 */}
           {exp.projects.length > 0 && (
-            <div className="space-y-4">
+            <div className="space-y-5">
               {exp.projects.map((project, idx) => (
-                <div key={idx} className="p-4">
-                  <h5 className="font-semibold">{project.title}</h5>
+                <article key={idx} className="border-l border-slate-200 pl-4">
+                  <div className="grid gap-1 sm:grid-cols-[1fr_auto] sm:items-start sm:gap-4">
+                    <div>
+                      <h5 className="text-sm font-bold text-slate-950">{project.title}</h5>
+                      <p className="mt-1 text-xs font-semibold text-slate-600">
+                        {project.position}
+                      </p>
+                    </div>
+                    <span className="text-xs text-slate-500 sm:text-right">
+                      {project.startedAt} - {project.endedAt || '진행중'}
+                    </span>
+                  </div>
 
-                  <p className="text-sm text-grey mb-2 leading-relaxed">
-                    {project.position} / {project.startedAt} - {project.endedAt || '진행중'}
-                  </p>
+                  {project.description && (
+                    <p className="mt-2 text-sm leading-6 text-slate-700">{project.description}</p>
+                  )}
 
-                  {/* 세부사항 */}
                   {project.details && project.details.length > 0 && (
-                    <ul className="text-sm space-y-1 mb-3">
+                    <ul className="mt-2 list-disc space-y-1.5 pl-4 text-sm leading-6 text-slate-700 marker:text-slate-400">
                       {project.details.map((detail, detailIdx) => (
-                        <li key={detailIdx} className="list-disc leading-relaxed ml-4">
-                          {detail}
-                        </li>
+                        <li key={detailIdx}>{detail}</li>
                       ))}
                     </ul>
                   )}
 
-                  {/* 성과 */}
                   {project.achievements && project.achievements.length > 0 && (
-                    <div className="bg-green-50 border border-green-200 rounded-md p-3 mb-3">
-                      <h6 className="text-sm font-semibold text-green-800 mb-2">주요 성과</h6>
-                      <ul className="text-sm text-green-700 space-y-1">
+                    <div className="mt-3">
+                      <p className="text-xs font-bold text-slate-500">주요 성과</p>
+                      <ul className="mt-1 list-disc space-y-1 pl-4 text-sm leading-6 text-slate-900 marker:text-slate-400">
                         {project.achievements.map((achievement, achievementIdx) => (
-                          <li key={achievementIdx} className="flex items-start">
-                            <span className="text-green-500 mr-1">✓</span>
-                            <span className="leading-relaxed">{achievement}</span>
-                          </li>
+                          <li key={achievementIdx}>{achievement}</li>
                         ))}
                       </ul>
                     </div>
                   )}
 
-                  {/* 기술스택 */}
-                  <div className="flex flex-wrap gap-1.5">
-                    {project.tech.map((tech, techIdx) => (
-                      <span
-                        key={techIdx}
-                        className="px-2 py-1 bg-info text-xs text-dark rounded-md font-medium"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                  <p className="mt-2 text-xs leading-5 text-slate-500">
+                    사용 기술: {project.tech.join(', ')}
+                  </p>
+                </article>
               ))}
             </div>
           )}
-        </div>
+        </article>
       ))}
     </section>
   );

@@ -1,18 +1,32 @@
 import { achievements } from '@/data/achievements';
 
+const SECTION_TITLE_CLASS =
+  'mb-3 border-b border-slate-300 pb-1 text-sm font-bold uppercase tracking-normal text-slate-950';
+
 export default function Achievements() {
   return (
     <section>
-      <h3 className="text-lg sm:text-xl font-bold border-b pb-2 mb-4 sm:mb-6">기타</h3>
-      <div className="space-y-4">
+      <h3 className={SECTION_TITLE_CLASS}>기타</h3>
+      <div className="space-y-3">
         {achievements.map((achievement, index) => (
-          <div key={index}>
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 space-y-1 sm:space-y-0">
-              <h4 className="sm:text-lg font-semibold">{achievement.title}</h4>
-              <span className="text-sm">{achievement.date}</span>
+          <article key={index} className="grid gap-1 sm:grid-cols-[1fr_auto] sm:gap-4">
+            <div>
+              <h4 className="text-sm font-bold text-slate-950">{achievement.title}</h4>
+              {achievement.link ? (
+                <a
+                  href={achievement.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm leading-6 text-slate-700 hover:text-slate-950"
+                >
+                  {achievement.detail}
+                </a>
+              ) : (
+                <p className="text-sm leading-6 text-slate-700">{achievement.detail}</p>
+              )}
             </div>
-            <p className="text-sm">{achievement.detail}</p>
-          </div>
+            <span className="text-sm text-slate-500 sm:text-right">{achievement.date}</span>
+          </article>
         ))}
       </div>
     </section>
