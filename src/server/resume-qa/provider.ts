@@ -40,10 +40,13 @@ const isPlainObject = (value: unknown): value is Record<string, unknown> =>
 const isStringArray = (value: unknown): value is string[] =>
   Array.isArray(value) && value.every(item => typeof item === 'string');
 
+const isResumeQaQuestionScope = (value: unknown) => value === 'resume' || value === 'out_of_scope';
+
 const isResumeQaModelOutput = (value: unknown): value is ResumeQaModelOutput => {
   if (!isPlainObject(value)) return false;
 
   return (
+    isResumeQaQuestionScope(value.questionScope) &&
     typeof value.answerable === 'boolean' &&
     typeof value.answer === 'string' &&
     isStringArray(value.sourceIds) &&

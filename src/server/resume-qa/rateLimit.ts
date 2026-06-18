@@ -69,6 +69,10 @@ const createRateLimitStore = async (): Promise<RateLimitStore | null> => {
 
 let storePromise: Promise<RateLimitStore | null> | null = null;
 
+const resetRateLimitStore = () => {
+  storePromise = null;
+};
+
 const getRateLimitStore = async () => {
   if (!storePromise) {
     storePromise = createRateLimitStore();
@@ -77,7 +81,7 @@ const getRateLimitStore = async () => {
   try {
     return await storePromise;
   } catch (error) {
-    storePromise = null;
+    resetRateLimitStore();
     throw error;
   }
 };
@@ -233,6 +237,8 @@ export const checkResumeQaRateLimit = async (
       status: 'allowed',
     };
   } catch (error) {
+    resetRateLimitStore();
+
     return {
       status: 'unavailable',
       reason: error instanceof Error ? error.message : 'Unknown Redis error.',

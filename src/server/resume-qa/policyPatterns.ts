@@ -68,3 +68,8 @@ export const hasBlockedTextPattern = (text: string) =>
 
 export const hasLeakPattern = (text: string) =>
   matchesPolicyPattern('RESUME_QA_LEAK_PATTERNS', text);
+
+export const assertPolicyPatternsConfigured = () => {
+  getPolicyPatterns('RESUME_QA_BLOCKED_TEXT_PATTERNS');
+  getPolicyPatterns('RESUME_QA_LEAK_PATTERNS');
+};

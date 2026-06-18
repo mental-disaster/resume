@@ -10,7 +10,10 @@ import {
   type ResumeQaRequest,
 } from '@/types/resumeQa';
 
-import { generateResumeQaAnswer } from '@/server/resume-qa/aiProvider';
+import {
+  assertResumeQaAiConfiguration,
+  generateResumeQaAnswer,
+} from '@/server/resume-qa/aiProvider';
 import { hasBlockedTextPattern } from '@/server/resume-qa/policyPatterns';
 import { ResumeQaProviderConfigError, ResumeQaProviderError } from '@/server/resume-qa/provider';
 import { checkResumeQaRateLimit } from '@/server/resume-qa/rateLimit';
@@ -208,6 +211,18 @@ export async function POST(request: NextRequest) {
     requestBody = await request.json();
   } catch {
     return createErrorResponse(400, 'invalid_json', '올바른 JSON 형식이 아닙니다.');
+  }
+
+  try {
+    assertResumeQaAiConfiguration();
+  } catch (error) {
+    if (error instanceof ResumeQaProviderConfigError) {
+      logResumeQaError('resume qa configuration unavailable', error);
+
+      return createConfigErrorResponse();
+    }
+
+    throw error;
   }
 
   let validationResult: RequestValidationResult;

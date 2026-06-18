@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useId, useRef, useState } from 'react';
-import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
+import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react';
 import {
   IconAlertCircle,
   IconBrandGoogle,
@@ -15,6 +15,7 @@ import {
   RESUME_QA_ENDPOINT,
   RESUME_QA_MAX_QUESTION_LENGTH,
   RESUME_QA_REFUSAL_ANSWER,
+  RESUME_QA_UNSUPPORTED_ANSWER,
   type ResumeQaAnswerResponse,
   type ResumeQaApiResponse,
   type ResumeQaConversationMessage,
@@ -48,6 +49,9 @@ const INITIAL_MESSAGES: ChatMessage[] = [
 ];
 
 const SESSION_STORAGE_KEY = 'resume-ai-chat-messages';
+const LONG_PARAGRAPH_LENGTH = 180;
+const MESSAGE_SENTENCE_PATTERN = /(?<=[.!?。！？])\s+/;
+const MESSAGE_LIST_ITEM_PATTERN = /^([-*•]|\d+[.)])\s+(.+)$/;
 
 const createMessageId = () => Date.now() + Math.random();
 
@@ -138,7 +142,8 @@ const createConversationContext = (messages: ChatMessage[]): ResumeQaConversatio
         message.id !== INITIAL_MESSAGES[0].id &&
         !message.isLoading &&
         !message.isError &&
-        message.content !== RESUME_QA_REFUSAL_ANSWER
+        message.content !== RESUME_QA_REFUSAL_ANSWER &&
+        message.content !== RESUME_QA_UNSUPPORTED_ANSWER
     )
     .map(message => ({
       role: message.role,
@@ -146,16 +151,98 @@ const createConversationContext = (messages: ChatMessage[]): ResumeQaConversatio
     }))
     .slice(-8);
 
+const splitLongParagraph = (paragraph: string) => {
+  if (paragraph.length < LONG_PARAGRAPH_LENGTH) return [paragraph];
+
+  const sentences = paragraph.split(MESSAGE_SENTENCE_PATTERN).filter(Boolean);
+
+  if (sentences.length < 3) return [paragraph];
+
+  const chunks: string[] = [];
+
+  for (let index = 0; index < sentences.length; index += 2) {
+    chunks.push(sentences.slice(index, index + 2).join(' '));
+  }
+
+  return chunks;
+};
+
+const getReadableParagraphs = (content: string) =>
+  content
+    .trim()
+    .split(/\n{2,}/)
+    .flatMap(paragraph => splitLongParagraph(paragraph.trim()))
+    .filter(Boolean);
+
+const renderMessageContent = (message: ChatMessage) => {
+  if (message.isLoading) {
+    return <div className="animate-pulse">{message.content}</div>;
+  }
+
+  const lines = message.content
+    .trim()
+    .split('\n')
+    .map(line => line.trim())
+    .filter(Boolean);
+  const hasListItems = lines.some(line => MESSAGE_LIST_ITEM_PATTERN.test(line));
+
+  if (hasListItems) {
+    const contentBlocks: ReactNode[] = [];
+    let listItems: string[] = [];
+
+    const flushListItems = () => {
+      if (listItems.length === 0) return;
+
+      contentBlocks.push(
+        <ul key={`list-${contentBlocks.length}`} className="ml-4 list-disc space-y-1">
+          {listItems.map(item => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      );
+      listItems = [];
+    };
+
+    lines.forEach(line => {
+      const listItemMatch = line.match(MESSAGE_LIST_ITEM_PATTERN);
+
+      if (listItemMatch) {
+        listItems.push(listItemMatch[2]);
+        return;
+      }
+
+      flushListItems();
+      contentBlocks.push(<p key={`paragraph-${contentBlocks.length}`}>{line}</p>);
+    });
+
+    flushListItems();
+
+    return <div className="space-y-2 whitespace-normal">{contentBlocks}</div>;
+  }
+
+  return (
+    <div className="space-y-2 whitespace-normal">
+      {getReadableParagraphs(message.content).map(paragraph => (
+        <p key={paragraph}>{paragraph}</p>
+      ))}
+    </div>
+  );
+};
+
 export default function ResumeAiChat() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isEntryHintVisible, setIsEntryHintVisible] = useState(false);
+  const [hasPromptedEntryHint, setHasPromptedEntryHint] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
   const [hasLoadedCachedMessages, setHasLoadedCachedMessages] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const messagesRef = useRef<HTMLDivElement>(null);
+  const entryHintRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const requestControllerRef = useRef<AbortController | null>(null);
+  const pendingUserMessageScrollIdRef = useRef<number | null>(null);
   const isMountedRef = useRef(true);
   const titleId = useId();
   const hasStartedConversation = messages.some(message => message.role === 'user');
@@ -178,6 +265,59 @@ export default function ResumeAiChat() {
       JSON.stringify(messages.filter(message => !message.isLoading))
     );
   }, [hasLoadedCachedMessages, messages]);
+
+  useEffect(() => {
+    if (!hasLoadedCachedMessages || isOpen || hasPromptedEntryHint) {
+      return;
+    }
+
+    const showTimerId = window.setTimeout(() => {
+      setIsEntryHintVisible(true);
+      setHasPromptedEntryHint(true);
+    }, 700);
+
+    return () => {
+      window.clearTimeout(showTimerId);
+    };
+  }, [hasLoadedCachedMessages, hasPromptedEntryHint, isOpen]);
+
+  useEffect(() => {
+    if (!isEntryHintVisible) return;
+
+    const hideTimerId = window.setTimeout(() => {
+      setIsEntryHintVisible(false);
+    }, 12_000);
+
+    return () => {
+      window.clearTimeout(hideTimerId);
+    };
+  }, [isEntryHintVisible]);
+
+  useEffect(() => {
+    if (!isEntryHintVisible) return;
+
+    const closeOnOutsidePointerDown = (event: PointerEvent) => {
+      const target = event.target;
+
+      if (!(target instanceof Node)) return;
+      if (entryHintRef.current?.contains(target) || triggerRef.current?.contains(target)) return;
+
+      setIsEntryHintVisible(false);
+      setHasPromptedEntryHint(true);
+    };
+
+    window.addEventListener('pointerdown', closeOnOutsidePointerDown, true);
+
+    return () => {
+      window.removeEventListener('pointerdown', closeOnOutsidePointerDown, true);
+    };
+  }, [isEntryHintVisible]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsEntryHintVisible(false);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -224,11 +364,49 @@ export default function ResumeAiChat() {
 
       messagesElement.scrollTop = messagesElement.scrollHeight;
     });
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen || pendingUserMessageScrollIdRef.current === null) return;
+
+    requestAnimationFrame(() => {
+      const messagesElement = messagesRef.current;
+      const userMessageId = pendingUserMessageScrollIdRef.current;
+
+      if (!messagesElement || userMessageId === null) return;
+
+      const targetMessage = messagesElement.querySelector<HTMLElement>(
+        `[data-chat-message-id="${userMessageId}"]`
+      );
+
+      if (!targetMessage) return;
+
+      const messagesRect = messagesElement.getBoundingClientRect();
+      const targetRect = targetMessage.getBoundingClientRect();
+      const nextScrollTop = messagesElement.scrollTop + targetRect.top - messagesRect.top - 12;
+
+      messagesElement.scrollTo({
+        top: Math.max(0, nextScrollTop),
+        behavior: 'auto',
+      });
+      pendingUserMessageScrollIdRef.current = null;
+    });
   }, [isOpen, messages]);
 
   const selectExample = (question: string) => {
     setInput(question);
     inputRef.current?.focus();
+  };
+
+  const openChat = () => {
+    setIsEntryHintVisible(false);
+    setHasPromptedEntryHint(true);
+    setIsOpen(true);
+  };
+
+  const closeEntryHint = () => {
+    setIsEntryHintVisible(false);
+    setHasPromptedEntryHint(true);
   };
 
   const replaceAssistantMessage = (messageId: number, message: Omit<ChatMessage, 'id'>) => {
@@ -251,15 +429,17 @@ export default function ResumeAiChat() {
     if (!question || isSending) return;
 
     const assistantMessageId = createMessageId();
+    const userMessageId = createMessageId();
     const conversation = createConversationContext(messages);
     const controller = new AbortController();
     requestControllerRef.current?.abort();
     requestControllerRef.current = controller;
+    pendingUserMessageScrollIdRef.current = userMessageId;
 
     setMessages(currentMessages => [
       ...currentMessages,
       {
-        id: createMessageId(),
+        id: userMessageId,
         role: 'user',
         content: question,
       },
@@ -388,6 +568,7 @@ export default function ResumeAiChat() {
                 {messages.map(message => (
                   <div
                     key={message.id}
+                    data-chat-message-id={message.id}
                     className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
@@ -399,14 +580,17 @@ export default function ResumeAiChat() {
                             : 'rounded-bl-md bg-slate-100 text-grey'
                       }`}
                     >
-                      <div className={message.isLoading ? 'animate-pulse' : 'whitespace-pre-wrap'}>
-                        {message.content}
-                      </div>
+                      {renderMessageContent(message)}
 
                       {message.sources && message.sources.length > 0 && (
-                        <div className="mt-3 border-t border-slate-200/80 pt-2">
-                          <p className="mb-1.5 text-[11px] font-bold text-slate-500">근거</p>
-                          <div className="space-y-1">
+                        <details className="group mt-3 border-t border-slate-200/80 pt-2">
+                          <summary className="flex cursor-pointer list-none items-center justify-between gap-2 rounded-lg px-1 py-1 text-[11px] font-bold text-slate-500 transition-colors duration-200 hover:bg-white/70">
+                            <span>근거 {message.sources.length}개</span>
+                            <span className="text-slate-400 transition-transform duration-200 group-open:rotate-180">
+                              ∨
+                            </span>
+                          </summary>
+                          <div className="mt-1.5 space-y-1">
                             {message.sources.map(source => (
                               <div
                                 key={source.id}
@@ -418,23 +602,7 @@ export default function ResumeAiChat() {
                               </div>
                             ))}
                           </div>
-                        </div>
-                      )}
-
-                      {message.suggestedQuestions && message.suggestedQuestions.length > 0 && (
-                        <div className="mt-3 flex flex-wrap gap-1.5">
-                          {message.suggestedQuestions.map(question => (
-                            <button
-                              key={question}
-                              type="button"
-                              onClick={() => selectExample(question)}
-                              disabled={isSending}
-                              className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-left text-[11px] text-grey transition-colors duration-200 hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-60"
-                            >
-                              {question}
-                            </button>
-                          ))}
-                        </div>
+                        </details>
                       )}
                     </div>
                   </div>
@@ -519,21 +687,57 @@ export default function ResumeAiChat() {
         </>
       )}
 
-      <button
-        ref={triggerRef}
-        type="button"
-        onClick={() => setIsOpen(current => !current)}
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-grey/90 shadow-lg transition-all duration-300 hover:bg-grey hover:shadow-xl sm:h-10 sm:w-10"
-        aria-controls="resume-ai-chat"
-        aria-expanded={isOpen}
-        aria-label={isOpen ? 'Close resume AI chat' : 'Open resume AI chat'}
-      >
-        {isOpen ? (
-          <IconX className="h-4 w-4 text-white transition-transform duration-300 sm:h-5 sm:w-5" />
-        ) : (
-          <IconMessageCircle className="h-4 w-4 text-white transition-transform duration-300 sm:h-5 sm:w-5" />
+      <div className="relative flex justify-end">
+        {isEntryHintVisible && !isOpen && (
+          <div
+            ref={entryHintRef}
+            className="absolute bottom-0 right-full z-10 mr-3 w-[min(18rem,calc(100vw-5rem))] rounded-xl border border-primary/20 bg-white p-3 text-left shadow-xl shadow-slate-900/10 sm:w-72"
+            aria-live="polite"
+          >
+            <div className="flex items-start gap-2">
+              <IconSparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+              <button type="button" onClick={openChat} className="min-w-0 flex-1 text-left">
+                <span className="block text-xs font-bold leading-snug text-grey">
+                  이력서 궁금한 점을 AI에게 물어보세요.
+                </span>
+                <span className="mt-1 block text-[11px] leading-relaxed text-slate-500">
+                  경력, 프로젝트, 기술 스택을 바로 질문할 수 있습니다.
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={closeEntryHint}
+                className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-slate-400 transition-colors duration-200 hover:bg-slate-100 hover:text-grey"
+                aria-label="AI chat 안내 닫기"
+              >
+                <IconX className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          </div>
         )}
-      </button>
+
+        <button
+          ref={triggerRef}
+          type="button"
+          onClick={() => {
+            setIsEntryHintVisible(false);
+            setHasPromptedEntryHint(true);
+            setIsOpen(current => !current);
+          }}
+          className={`flex h-8 w-8 items-center justify-center rounded-full bg-grey/90 shadow-lg transition-all duration-300 hover:bg-grey hover:shadow-xl sm:h-10 sm:w-10 ${
+            isEntryHintVisible ? 'ring-2 ring-primary/40 ring-offset-2 ring-offset-white' : ''
+          }`}
+          aria-controls="resume-ai-chat"
+          aria-expanded={isOpen}
+          aria-label={isOpen ? 'Close resume AI chat' : 'Open resume AI chat'}
+        >
+          {isOpen ? (
+            <IconX className="h-4 w-4 text-white transition-transform duration-300 sm:h-5 sm:w-5" />
+          ) : (
+            <IconMessageCircle className="h-4 w-4 text-white transition-transform duration-300 sm:h-5 sm:w-5" />
+          )}
+        </button>
+      </div>
     </>
   );
 }

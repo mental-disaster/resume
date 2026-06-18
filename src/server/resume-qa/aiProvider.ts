@@ -6,6 +6,7 @@ import {
   RESUME_QA_MAX_SUGGESTED_QUESTION_LENGTH,
   RESUME_QA_MAX_SUGGESTED_QUESTIONS,
   RESUME_QA_REFUSAL_ANSWER,
+  RESUME_QA_UNSUPPORTED_ANSWER,
   type ResumeQaAnswerResponse,
   type ResumeQaConversationMessage,
   type ResumeQaModelOutput,
@@ -20,7 +21,7 @@ import {
   type PublicCareerItem,
   type PublicCareerSourceType,
 } from './publicCareer';
-import { hasLeakPattern } from './policyPatterns';
+import { assertPolicyPatternsConfigured, hasLeakPattern } from './policyPatterns';
 import { ResumeQaProviderConfigError, type ResumeQaProvider } from './provider';
 
 const DEFAULT_AI_PROVIDER = 'gemini';
@@ -34,10 +35,14 @@ const SOURCE_LABEL_BY_TYPE: Record<PublicCareerSourceType, ResumeQaSourceLabel> 
 const modelOutputSchema = {
   type: 'object',
   properties: {
+    questionScope: {
+      type: 'string',
+      enum: ['resume', 'out_of_scope'],
+      description: 'Question scope selected according to the system instruction.',
+    },
     answerable: {
       type: 'boolean',
-      description:
-        'Whether the question can be answered only from the provided public career data.',
+      description: 'Whether the answer is supported by the provided public career data.',
     },
     answer: {
       type: 'string',
@@ -62,7 +67,7 @@ const modelOutputSchema = {
       description: 'Follow-up questions within the resume scope.',
     },
   },
-  required: ['answerable', 'answer', 'sourceIds', 'suggestedQuestions'],
+  required: ['questionScope', 'answerable', 'answer', 'sourceIds', 'suggestedQuestions'],
 } as const;
 
 const resumeQaProviders = {
@@ -110,6 +115,35 @@ const serializeCareerDataForPrompt = () =>
     }))
   );
 
+const serializeKnownTechnologiesForPrompt = () =>
+  JSON.stringify(
+    Array.from(
+      new Set(
+        publicCareer.flatMap(item => [
+          ...item.skills,
+          ...item.keywords.filter(keyword => /[A-Za-z]/.test(keyword)),
+        ])
+      )
+    ).sort((left, right) => left.localeCompare(right))
+  );
+
+const createSourceIdDisplayVariants = (sourceId: string) => {
+  const [, ...restParts] = sourceId.split('.');
+  const suffix = restParts.join('.');
+
+  return suffix ? [sourceId, `프로젝트.${suffix}`] : [sourceId];
+};
+
+const replaceSourceIdsWithTitles = (text: string) =>
+  publicCareer.reduce(
+    (currentText, item) =>
+      createSourceIdDisplayVariants(item.id).reduce(
+        (nextText, sourceIdVariant) => nextText.replaceAll(sourceIdVariant, item.title),
+        currentText
+      ),
+    text
+  );
+
 const formatCurrentDate = () =>
   new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Seoul',
@@ -130,6 +164,9 @@ const buildUserPrompt = ({ question, conversation = [] }: ResumeQaRequest) => `
 Current date:
 ${formatCurrentDate()} Asia/Seoul
 
+Known technology names from public career data:
+${serializeKnownTechnologiesForPrompt()}
+
 Public career data:
 ${serializeCareerDataForPrompt()}
 
@@ -142,7 +179,7 @@ ${question}
 
 const normalizeSuggestedQuestions = (questions: string[]) =>
   questions
-    .map(question => question.trim())
+    .map(question => replaceSourceIdsWithTitles(question).trim())
     .filter(
       question =>
         Boolean(question) &&
@@ -154,25 +191,33 @@ const normalizeSuggestedQuestions = (questions: string[]) =>
 const isPublicCareerItem = (item: PublicCareerItem | undefined): item is PublicCareerItem =>
   Boolean(item);
 
+const createUnsupportedResponse = (): ResumeQaAnswerResponse => ({
+  answerable: false,
+  answer: RESUME_QA_UNSUPPORTED_ANSWER,
+  sources: [],
+  suggestedQuestions: [],
+});
+
+const createRefusalResponse = (): ResumeQaAnswerResponse => ({
+  answerable: false,
+  answer: RESUME_QA_REFUSAL_ANSWER,
+  sources: [],
+  suggestedQuestions: [],
+});
+
 const mapModelOutputToApiResponse = (modelOutput: ResumeQaModelOutput): ResumeQaAnswerResponse => {
-  if (!modelOutput.answerable) {
-    return {
-      answerable: false,
-      answer: RESUME_QA_REFUSAL_ANSWER,
-      sources: [],
-      suggestedQuestions: [],
-    };
+  if (modelOutput.questionScope === 'out_of_scope') {
+    return createRefusalResponse();
   }
 
-  const answer = modelOutput.answer.trim();
+  if (!modelOutput.answerable) {
+    return createUnsupportedResponse();
+  }
+
+  const answer = replaceSourceIdsWithTitles(modelOutput.answer.trim());
 
   if (!answer || answer.length > RESUME_QA_MAX_ANSWER_LENGTH || hasLeakPattern(answer)) {
-    return {
-      answerable: false,
-      answer: RESUME_QA_REFUSAL_ANSWER,
-      sources: [],
-      suggestedQuestions: [],
-    };
+    return createRefusalResponse();
   }
 
   const uniqueSourceIds = Array.from(new Set(modelOutput.sourceIds));
@@ -187,12 +232,7 @@ const mapModelOutputToApiResponse = (modelOutput: ResumeQaModelOutput): ResumeQa
     }));
 
   if (sources.length === 0) {
-    return {
-      answerable: false,
-      answer: RESUME_QA_REFUSAL_ANSWER,
-      sources: [],
-      suggestedQuestions: [],
-    };
+    return createUnsupportedResponse();
   }
 
   return {
@@ -214,4 +254,10 @@ export const generateResumeQaAnswer = async (
   });
 
   return mapModelOutputToApiResponse(modelOutput);
+};
+
+export const assertResumeQaAiConfiguration = () => {
+  getResumeQaProvider();
+  getSystemInstruction();
+  assertPolicyPatternsConfigured();
 };
