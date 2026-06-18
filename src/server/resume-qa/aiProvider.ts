@@ -3,8 +3,6 @@ import 'server-only';
 import {
   RESUME_QA_MAX_ANSWER_LENGTH,
   RESUME_QA_MAX_SOURCES,
-  RESUME_QA_MAX_SUGGESTED_QUESTION_LENGTH,
-  RESUME_QA_MAX_SUGGESTED_QUESTIONS,
   RESUME_QA_REFUSAL_ANSWER,
   RESUME_QA_UNSUPPORTED_ANSWER,
   type ResumeQaAnswerResponse,
@@ -30,6 +28,7 @@ const SYSTEM_INSTRUCTION_ENV = 'RESUME_QA_SYSTEM_INSTRUCTION';
 const SOURCE_LABEL_BY_TYPE: Record<PublicCareerSourceType, ResumeQaSourceLabel> = {
   resume: '이력서 본문',
   public_detail: '추가 공개 이력 데이터',
+  owner_provided: '추가 제공 이력 데이터',
 };
 
 const modelOutputSchema = {
@@ -38,15 +37,12 @@ const modelOutputSchema = {
     questionScope: {
       type: 'string',
       enum: ['resume', 'out_of_scope'],
-      description: 'Question scope selected according to the system instruction.',
     },
     answerable: {
       type: 'boolean',
-      description: 'Whether the answer is supported by the provided public career data.',
     },
     answer: {
       type: 'string',
-      description: 'User-facing answer. Use Korean unless the user asks in English.',
     },
     sourceIds: {
       type: 'array',
@@ -55,19 +51,9 @@ const modelOutputSchema = {
         enum: publicCareer.map(item => item.id),
       },
       maxItems: RESUME_QA_MAX_SOURCES,
-      description:
-        'Ids from public career data used as evidence. Include at least one id when answerable is true.',
-    },
-    suggestedQuestions: {
-      type: 'array',
-      items: {
-        type: 'string',
-      },
-      maxItems: RESUME_QA_MAX_SUGGESTED_QUESTIONS,
-      description: 'Follow-up questions within the resume scope.',
     },
   },
-  required: ['questionScope', 'answerable', 'answer', 'sourceIds', 'suggestedQuestions'],
+  required: ['questionScope', 'answerable', 'answer', 'sourceIds'],
 } as const;
 
 const resumeQaProviders = {
@@ -102,16 +88,21 @@ const serializeCareerDataForPrompt = () =>
       title: item.title,
       visibility: item.visibility,
       sourceType: item.sourceType,
+      kind: item.kind,
+      sourceUrl: item.sourceUrl,
+      sourceDescription: item.sourceDescription,
       category: item.category,
       summary: item.summary,
       details: item.details,
-      answerGuidance: item.answerGuidance,
-      skills: item.skills,
+      agentContext: item.agentContext,
+      skills: item.skills ?? [],
       keywords: item.keywords,
       period: item.period,
+      date: item.date,
       startDate: item.startDate,
       endDate: item.endDate,
       role: item.role,
+      countsAsCareerPeriod: item.countsAsCareerPeriod,
     }))
   );
 
@@ -120,7 +111,7 @@ const serializeKnownTechnologiesForPrompt = () =>
     Array.from(
       new Set(
         publicCareer.flatMap(item => [
-          ...item.skills,
+          ...(item.skills ?? []),
           ...item.keywords.filter(keyword => /[A-Za-z]/.test(keyword)),
         ])
       )
@@ -177,17 +168,6 @@ User question:
 ${question}
 `;
 
-const normalizeSuggestedQuestions = (questions: string[]) =>
-  questions
-    .map(question => replaceSourceIdsWithTitles(question).trim())
-    .filter(
-      question =>
-        Boolean(question) &&
-        question.length <= RESUME_QA_MAX_SUGGESTED_QUESTION_LENGTH &&
-        !hasLeakPattern(question)
-    )
-    .slice(0, RESUME_QA_MAX_SUGGESTED_QUESTIONS);
-
 const isPublicCareerItem = (item: PublicCareerItem | undefined): item is PublicCareerItem =>
   Boolean(item);
 
@@ -195,14 +175,12 @@ const createUnsupportedResponse = (): ResumeQaAnswerResponse => ({
   answerable: false,
   answer: RESUME_QA_UNSUPPORTED_ANSWER,
   sources: [],
-  suggestedQuestions: [],
 });
 
 const createRefusalResponse = (): ResumeQaAnswerResponse => ({
   answerable: false,
   answer: RESUME_QA_REFUSAL_ANSWER,
   sources: [],
-  suggestedQuestions: [],
 });
 
 const mapModelOutputToApiResponse = (modelOutput: ResumeQaModelOutput): ResumeQaAnswerResponse => {
@@ -229,6 +207,9 @@ const mapModelOutputToApiResponse = (modelOutput: ResumeQaModelOutput): ResumeQa
       id: item.id,
       label: SOURCE_LABEL_BY_TYPE[item.sourceType],
       title: item.title,
+      ...(item.kind ? { kind: item.kind } : {}),
+      ...(item.sourceUrl ? { sourceUrl: item.sourceUrl } : {}),
+      ...(item.sourceDescription ? { sourceDescription: item.sourceDescription } : {}),
     }));
 
   if (sources.length === 0) {
@@ -239,7 +220,6 @@ const mapModelOutputToApiResponse = (modelOutput: ResumeQaModelOutput): ResumeQa
     answerable: true,
     answer,
     sources,
-    suggestedQuestions: normalizeSuggestedQuestions(modelOutput.suggestedQuestions),
   };
 };
 

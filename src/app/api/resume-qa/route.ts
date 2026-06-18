@@ -33,12 +33,6 @@ type RequestValidationResult =
 const JSON_CONTENT_TYPE = 'application/json';
 const MAX_CONVERSATION_MESSAGES = 8;
 const MAX_CONVERSATION_MESSAGE_LENGTH = 1200;
-const BRIEF_CONVERSATIONAL_SUGGESTED_QUESTIONS = [
-  '백엔드 개발 경력은 얼마나 되나요?',
-  '대표 프로젝트와 맡은 역할을 알려주세요.',
-  '주요 기술 스택은 무엇인가요?',
-];
-
 const BRIEF_CONVERSATIONAL_PATTERNS = {
   greeting: /^(?:안녕|안녕하세요|하이|헬로|hi|hello|hey)$/,
   thanks: /^(?:고마워|고마워요|감사|감사합니다|ㄱㅅ|thanks|thankyou|thx)$/,
@@ -170,7 +164,6 @@ const createRefusalResponse = () => {
     answerable: false,
     answer: RESUME_QA_REFUSAL_ANSWER,
     sources: [],
-    suggestedQuestions: [],
   };
 
   return NextResponse.json(body);
@@ -181,7 +174,6 @@ const createBriefConversationalResponse = (question: string) => {
     answerable: false,
     answer: getBriefConversationalAnswer(question),
     sources: [],
-    suggestedQuestions: BRIEF_CONVERSATIONAL_SUGGESTED_QUESTIONS,
   };
 
   return NextResponse.json(body);

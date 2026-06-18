@@ -1,14 +1,11 @@
 import {
   IconBrandDocker,
   IconBrandReact,
-  IconDatabase,
   IconDeviceDesktop,
   IconInfinity,
   IconSettings,
   IconBrandTypescript,
   IconBrandGit,
-  IconBrandPython,
-  IconHtml,
 } from '@tabler/icons-react';
 
 export interface Skill {
@@ -35,10 +32,6 @@ export const skills: Skill[] = [
         icon: IconBrandReact,
         name: 'React',
       },
-      {
-        icon: IconHtml,
-        name: 'HTML/CSS',
-      },
     ],
   },
   {
@@ -46,26 +39,10 @@ export const skills: Skill[] = [
     icon: IconSettings,
     tech: [
       {
-        icon: IconBrandPython,
-        name: 'Python',
-      },
-      {
         name: 'Java',
       },
       {
         name: 'Spring Boot',
-      },
-    ],
-  },
-  {
-    category: 'database',
-    icon: IconDatabase,
-    tech: [
-      {
-        name: 'MariaDB',
-      },
-      {
-        name: 'Tibero',
       },
     ],
   },

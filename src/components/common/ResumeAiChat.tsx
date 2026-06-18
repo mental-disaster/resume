@@ -28,7 +28,6 @@ type ChatMessage = {
   role: 'user' | 'assistant';
   content: string;
   sources?: ResumeQaSource[];
-  suggestedQuestions?: string[];
   isLoading?: boolean;
   isError?: boolean;
 };
@@ -51,7 +50,7 @@ const INITIAL_MESSAGES: ChatMessage[] = [
 const SESSION_STORAGE_KEY = 'resume-ai-chat-messages';
 const LONG_PARAGRAPH_LENGTH = 180;
 const MESSAGE_SENTENCE_PATTERN = /(?<=[.!?。！？])\s+/;
-const MESSAGE_LIST_ITEM_PATTERN = /^([-*•]|\d+[.)])\s+(.+)$/;
+const MESSAGE_LIST_ITEM_PATTERN = /^([-*•]|\d+[.)]|[ivxlcdm]+[.)])\s+(.+)$/;
 
 const createMessageId = () => Date.now() + Math.random();
 
@@ -63,13 +62,15 @@ const isResumeQaSource = (value: unknown): value is ResumeQaSource => {
 
   return (
     typeof value.id === 'string' &&
-    (value.label === '이력서 본문' || value.label === '추가 공개 이력 데이터') &&
-    typeof value.title === 'string'
+    (value.label === '이력서 본문' ||
+      value.label === '추가 공개 이력 데이터' ||
+      value.label === '추가 제공 이력 데이터') &&
+    typeof value.title === 'string' &&
+    (value.kind === undefined || typeof value.kind === 'string') &&
+    (value.sourceUrl === undefined || typeof value.sourceUrl === 'string') &&
+    (value.sourceDescription === undefined || typeof value.sourceDescription === 'string')
   );
 };
-
-const isStringArray = (value: unknown): value is string[] =>
-  Array.isArray(value) && value.every(item => typeof item === 'string');
 
 const isChatMessage = (value: unknown): value is ChatMessage => {
   if (!isPlainObject(value)) return false;
@@ -82,7 +83,6 @@ const isChatMessage = (value: unknown): value is ChatMessage => {
     typeof message.content === 'string' &&
     (message.sources === undefined ||
       (Array.isArray(message.sources) && message.sources.every(isResumeQaSource))) &&
-    (message.suggestedQuestions === undefined || isStringArray(message.suggestedQuestions)) &&
     (message.isLoading === undefined || typeof message.isLoading === 'boolean') &&
     (message.isError === undefined || typeof message.isError === 'boolean')
   );
@@ -98,7 +98,16 @@ const parseCachedMessages = (cachedValue: string | null): ChatMessage[] | null =
       return null;
     }
 
-    return parsedValue.every(isChatMessage) ? parsedValue : null;
+    if (!parsedValue.every(isChatMessage)) return null;
+
+    return parsedValue.map(({ id, role, content, sources, isLoading, isError }) => ({
+      id,
+      role,
+      content,
+      ...(sources ? { sources } : {}),
+      ...(isLoading ? { isLoading } : {}),
+      ...(isError ? { isError } : {}),
+    }));
   } catch {
     return null;
   }
@@ -111,8 +120,7 @@ const isResumeQaAnswerResponse = (value: unknown): value is ResumeQaAnswerRespon
     typeof value.answerable === 'boolean' &&
     typeof value.answer === 'string' &&
     Array.isArray(value.sources) &&
-    value.sources.every(isResumeQaSource) &&
-    isStringArray(value.suggestedQuestions)
+    value.sources.every(isResumeQaSource)
   );
 };
 
@@ -195,8 +203,8 @@ const renderMessageContent = (message: ChatMessage) => {
 
       contentBlocks.push(
         <ul key={`list-${contentBlocks.length}`} className="ml-4 list-disc space-y-1">
-          {listItems.map(item => (
-            <li key={item}>{item}</li>
+          {listItems.map((item, itemIndex) => (
+            <li key={`item-${itemIndex}`}>{item}</li>
           ))}
         </ul>
       );
@@ -222,8 +230,8 @@ const renderMessageContent = (message: ChatMessage) => {
 
   return (
     <div className="space-y-2 whitespace-normal">
-      {getReadableParagraphs(message.content).map(paragraph => (
-        <p key={paragraph}>{paragraph}</p>
+      {getReadableParagraphs(message.content).map((paragraph, paragraphIndex) => (
+        <p key={`paragraph-${paragraphIndex}`}>{paragraph}</p>
       ))}
     </div>
   );
@@ -486,7 +494,6 @@ export default function ResumeAiChat() {
         role: 'assistant',
         content: apiResponse.answer,
         sources: apiResponse.sources,
-        suggestedQuestions: apiResponse.suggestedQuestions,
       });
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') return;
@@ -596,9 +603,33 @@ export default function ResumeAiChat() {
                                 key={source.id}
                                 className="rounded-lg bg-white/70 px-2 py-1.5 text-[11px] leading-snug text-slate-600"
                               >
-                                <span className="font-bold text-slate-500">{source.label}</span>
-                                <span className="mx-1 text-slate-300">·</span>
-                                <span>{source.title}</span>
+                                <div className="mb-1 flex flex-wrap gap-1">
+                                  <span className="rounded-full bg-slate-100 px-1.5 py-0.5 font-bold text-slate-500">
+                                    {source.label}
+                                  </span>
+                                  {source.kind && (
+                                    <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-slate-500">
+                                      {source.kind}
+                                    </span>
+                                  )}
+                                </div>
+                                {source.sourceUrl ? (
+                                  <a
+                                    href={source.sourceUrl}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="font-medium text-grey underline decoration-slate-300 underline-offset-2 transition-colors duration-200 hover:text-primary"
+                                  >
+                                    {source.title}
+                                  </a>
+                                ) : (
+                                  <span>{source.title}</span>
+                                )}
+                                {source.sourceDescription && (
+                                  <p className="mt-0.5 text-[10px] text-slate-400">
+                                    {source.sourceDescription}
+                                  </p>
+                                )}
                               </div>
                             ))}
                           </div>

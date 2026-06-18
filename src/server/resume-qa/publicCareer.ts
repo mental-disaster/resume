@@ -1,7 +1,7 @@
 import 'server-only';
 
 export type PublicCareerVisibility = 'featured' | 'supporting' | 'archive';
-export type PublicCareerSourceType = 'resume' | 'public_detail';
+export type PublicCareerSourceType = 'resume' | 'public_detail' | 'owner_provided';
 
 export interface PublicCareerItem {
   id: string;
@@ -9,15 +9,20 @@ export interface PublicCareerItem {
   visibility: PublicCareerVisibility;
   sourceType: PublicCareerSourceType;
   category: string;
+  kind?: string;
   summary: string;
   details: string[];
-  answerGuidance?: string[];
-  skills: string[];
+  agentContext?: string;
+  skills?: string[];
   keywords: string[];
-  period: string;
-  startDate: string;
-  endDate: string | null;
-  role: string;
+  period?: string;
+  date?: string;
+  startDate?: string;
+  endDate?: string | null;
+  role?: string;
+  countsAsCareerPeriod?: boolean;
+  sourceUrl?: string;
+  sourceDescription?: string;
 }
 
 export const publicCareer: PublicCareerItem[] = [
@@ -27,27 +32,27 @@ export const publicCareer: PublicCareerItem[] = [
     visibility: 'featured',
     sourceType: 'resume',
     category: 'public-sector-operation',
+    kind: '공공 서비스 운영, 보안 대응, 성능 개선',
     summary:
       '대국민 청렴포털과 공공기관 업무 시스템 운영을 맡아 보안 위협 대응, 성능 개선, SR 대응 자동화를 진행했습니다.',
     details: [
-      '웹사이트 공격 발생 시 IP 차단 기능을 개발해 시스템 무중단 운영을 유지했습니다.',
-      'SQL 인젝션 등 보안 취약점 점검 항목을 사전에 제거하고 보안 점검 통과에 기여했습니다.',
-      '응답 시간이 긴 쿼리를 튜닝해 51초에서 6초로 약 88% 개선했습니다.',
-      'Chrome 확장프로그램으로 신규 SR 요청 자동 알림을 구축해 수동 확인 작업을 줄였습니다.',
+      'SQL 인젝션 취약점 7건을 발견하고 Statement 기반 쿼리를 PreparedStatement로 전환했습니다.',
+      '특정 IP의 반복 요청으로 웹서비스 응답 지연이 발생한 상황에서 공격 IP 패턴을 분석하고 차단 처리 및 방어 로직을 강화했습니다.',
+      '보안 취약점 제거와 방어 로직 보강을 통해 보안 점검 통과에 기여했습니다.',
+      '슬로우 쿼리 원인을 분석하고 쿼리 튜닝 및 인덱스 최적화를 진행했습니다.',
+      '주요 쿼리 성능을 51초에서 6초로 약 88%, 6분에서 10초로 약 98% 개선했습니다.',
+      '월 평균 100건 수준의 운영 요청을 Chrome 확장프로그램 기반 신규 SR 자동 알림으로 전환해 수동 확인 업무를 줄였습니다.',
+      'PL 역할을 수행하며 Redmine 기반 일정 관리를 진행했고 일정 달성률을 86%에서 92%로 개선했습니다.',
     ],
-    answerGuidance: [
-      '보안 취약점 대응 질문에서는 SQL 인젝션 점검 항목 대응과 웹 공격 상황의 IP 차단 기능을 구분해서 설명합니다.',
-      'SQL 인젝션 대응은 점검 항목 식별, 위험 입력·쿼리 처리 개선, 보안 점검 통과 기여의 흐름으로 설명합니다.',
-      'IP 차단 기능은 공격성 요청이 확인됐을 때 차단 대상 IP를 적용해 서비스 중단 없이 대응한 운영 기능으로 설명합니다.',
-      '특정 URL, 파라미터, 쿼리 원문, 공격 로그, 내부 보안 정책은 공개 데이터에 없으므로 단정하지 않습니다.',
-      '추가 설명을 요구받으면 같은 문장을 반복하지 말고 대응 배경, 조치, 결과, 공개 한계를 나눠 답합니다.',
-    ],
+    agentContext:
+      '보안 취약점 대응 질문에서는 SQL 인젝션 7건 제거, Statement에서 PreparedStatement로의 전환, 반복 요청 IP 차단 로직을 구분해서 설명한다. 성능 질문에서는 51초에서 6초, 6분에서 10초 개선 수치를 사용할 수 있다. 운영 자동화 질문에서는 월 평균 100건 운영 요청의 자동 알림과 수동 확인 업무 감소를 설명한다. 특정 URL, 파라미터, 쿼리 원문, 공격 로그, 내부 보안 정책은 공개 데이터에 없으므로 단정하지 않는다. 추가 설명을 요구받으면 같은 문장을 반복하지 말고 대응 배경, 조치, 결과, 공개 한계를 나눠 답한다.',
     skills: ['Java', 'Spring Framework', 'Cubrid', 'Jenkins', 'SVN', 'Chrome Extension'],
     keywords: ['운영', '보안 취약점 대응', 'SQL 튜닝', '성능 개선', 'PL', 'SR 자동화'],
     period: '2024.12 - 현재',
     startDate: '2024-12',
     endDate: null,
     role: '운영 개발자, PL',
+    countsAsCareerPeriod: true,
   },
   {
     id: 'project.meeting-service',
@@ -55,6 +60,7 @@ export const publicCareer: PublicCareerItem[] = [
     visibility: 'featured',
     sourceType: 'resume',
     category: 'internal-product',
+    kind: '사내 서비스 운영 및 기능 개선',
     summary:
       '사내 회의 관리 웹서비스의 유지보수와 기능 개선을 담당하며 사용자 피드백 기반 개선과 배포 품질 관리를 수행했습니다.',
     details: [
@@ -64,16 +70,15 @@ export const publicCareer: PublicCareerItem[] = [
       'Merge Request 기반 코드 리뷰와 배포 전 품질 확인 프로세스에 참여했습니다.',
       'SSL 인증서 교체 등 AWS 서버 운영 작업을 수행했습니다.',
     ],
-    answerGuidance: [
-      '보안 관련 질문에서는 URL 조작 취약점 수정, 로그인 상태 유지 오류 수정, SSL 인증서 교체 경험을 분리해서 설명합니다.',
-      '구체적인 취약 URL이나 인증서 정보는 공개 데이터에 없으므로 단정하지 않습니다.',
-    ],
+    agentContext:
+      '보안 관련 질문에서는 URL 조작 취약점 수정, 로그인 상태 유지 오류 수정, SSL 인증서 교체 경험을 분리해서 설명한다. 구체적인 취약 URL이나 인증서 정보는 공개 데이터에 없으므로 단정하지 않는다.',
     skills: ['Next.js', 'TypeScript', 'AWS', 'GitLab'],
     keywords: ['Next.js', 'TypeScript', 'AWS', '코드 리뷰', '기능 개선', '보안 오류 수정'],
     period: '2025.03 - 2025.10',
     startDate: '2025-03',
     endDate: '2025-10',
     role: '시스템 운영 및 기능 개선',
+    countsAsCareerPeriod: true,
   },
   {
     id: 'project.overseas-mission-api',
@@ -81,6 +86,7 @@ export const publicCareer: PublicCareerItem[] = [
     visibility: 'featured',
     sourceType: 'resume',
     category: 'open-api',
+    kind: '공공 API 백엔드 개발',
     summary: '외교부 재외공관 관련 신규 API 구축과 기존 데이터 연계 시스템 개선을 담당했습니다.',
     details: [
       '신규 API를 구축하고 기존 API 및 데이터 연계 시스템을 개선했습니다.',
@@ -93,6 +99,7 @@ export const publicCareer: PublicCareerItem[] = [
     startDate: '2024-07',
     endDate: '2024-12',
     role: '백엔드 개발',
+    countsAsCareerPeriod: true,
   },
   {
     id: 'project.document-structuring',
@@ -100,6 +107,7 @@ export const publicCareer: PublicCareerItem[] = [
     visibility: 'supporting',
     sourceType: 'public_detail',
     category: 'data-processing',
+    kind: '문서 자동화와 데이터 구조화',
     summary:
       'PDF 문서 자동화 처리와 법령해석 데이터 구조화를 위한 텍스트 추출, OCR, 정규식 기반 패턴 인식 로직을 개발했습니다.',
     details: [
@@ -114,6 +122,7 @@ export const publicCareer: PublicCareerItem[] = [
     startDate: '2024-11',
     endDate: '2024-11',
     role: '시스템 개발',
+    countsAsCareerPeriod: true,
   },
   {
     id: 'project.api-gateway-backoffice',
@@ -121,6 +130,7 @@ export const publicCareer: PublicCareerItem[] = [
     visibility: 'supporting',
     sourceType: 'public_detail',
     category: 'platform-admin',
+    kind: '플랫폼 관리자와 Gateway 설정 자동화',
     summary:
       'Standalone API Gateway와 관리자 시스템을 풀스택으로 개발하고 Gateway 설정 자동 생성과 코드 리뷰 품질 개선에 기여했습니다.',
     details: [
@@ -136,6 +146,42 @@ export const publicCareer: PublicCareerItem[] = [
     startDate: '2024-03',
     endDate: '2024-08',
     role: '풀스택 개발',
+    countsAsCareerPeriod: true,
+  },
+  {
+    id: 'project.vehicle-history-open-api',
+    title: '차량 이력정보 오픈 API 플랫폼 구축',
+    visibility: 'supporting',
+    sourceType: 'public_detail',
+    category: 'open-api-platform',
+    kind: '공공 오픈 API 플랫폼과 이메일 시스템',
+    summary:
+      '국토교통부 사업용차량 이력정보 오픈 API 플랫폼에서 사용자·관리자 페이지를 풀스택으로 개발하고 이메일 발송 시스템을 구축했습니다.',
+    details: [
+      '사업용차량 이력정보 사용자 페이지와 관리자 시스템을 풀스택으로 개발했습니다.',
+      'SMTP 기반 이메일 전송 시스템을 구축하고 안정화했습니다.',
+      '메일 발송 로직을 비동기 처리해 SMTP 통신 과정의 지연을 줄였습니다.',
+      '이메일 설정을 외부화해 배포 시간을 단축했습니다.',
+      '불필요한 라이브러리 의존성을 줄이기 위해 jQuery 제거를 제안하고 반영했습니다.',
+    ],
+    agentContext:
+      '화면 이력서에서는 대표 프로젝트 압축을 위해 제외했지만, AI Q&A에서는 풀스택 개발, SMTP 이메일 시스템, 비동기 처리, 설정 외부화, 의존성 제거 제안 경험의 보조 근거로 사용한다. 구체적인 차량 데이터, API 명세, 내부 시스템 정보는 공개 데이터에 없으므로 단정하지 않는다.',
+    skills: ['Java', 'Spring Boot', 'Thymeleaf', 'Tibero', 'SMTP'],
+    keywords: [
+      '차량 이력정보',
+      '오픈 API',
+      '풀스택',
+      '이메일 시스템',
+      'SMTP',
+      '비동기 처리',
+      '설정 외부화',
+      'jQuery 제거',
+    ],
+    period: '2024.01 - 2024.03',
+    startDate: '2024-01',
+    endDate: '2024-03',
+    role: '풀스택 개발',
+    countsAsCareerPeriod: true,
   },
   {
     id: 'project.insurance-open-api',
@@ -143,21 +189,31 @@ export const publicCareer: PublicCareerItem[] = [
     visibility: 'featured',
     sourceType: 'resume',
     category: 'data-pipeline',
+    kind: '공공 데이터 파이프라인과 API 백엔드',
     summary:
       '행정안전부 재난배상책임보험 정보 개방사업에서 신규 API 백엔드와 데이터 파이프라인을 설계하고 구현했습니다.',
     details: [
-      '원천 데이터를 수집, 추출, 변환, 적재한 뒤 API로 제공하는 ETL 프로세스를 구축했습니다.',
+      '예상 22만 건 대비 실제 154만 건으로 약 7배 증가한 초기데이터를 안정적으로 적재하고 처리했습니다.',
+      '대규모 ETL 파이프라인을 설계하고 적재 구조를 확장했습니다.',
+      '일 단위 배치 처리 주기를 설계하고 자동화했습니다.',
+      '정규표현식 기반 표준화 규칙으로 공백, 특수문자, 날짜, 숫자 자리수 패딩을 보정했습니다.',
+      '주소 조합 규칙, 업종 코드 매핑, 사업자번호 규칙을 일괄 정제했습니다.',
+      '표준 스키마 자동 변환 로직을 구현해 API 제공용 데이터 구조를 표준화했습니다.',
+      '데이터 품질 불일치와 정합성 문제를 제거했습니다.',
       '로깅, 사용자 알림, 재시도 등 운영 안정성을 위한 흐름을 구현했습니다.',
       'Docker 기반 배포 환경을 구축하고 운영 안정화에 기여했습니다.',
       'PL 중도 퇴사 이후 남은 프로젝트 기간 동안 PL 역할을 수행했습니다.',
       '정부 행정망 장애 상황에서 이해관계자와 커뮤니케이션해 일정을 재조율하고 프로젝트를 마무리했습니다.',
     ],
+    agentContext:
+      '데이터 파이프라인 질문에서는 154만 건 초기데이터 처리, 예상 대비 7배 증가, 일 단위 배치, 정규표현식 기반 표준화, 주소·업종·사업자번호 정제, 표준 스키마 변환을 중심으로 답한다. 데이터 품질 문제를 100% 제거했다는 표현은 PDF 이력서 기준 성과로만 사용하고, 제거 범위가 프로젝트 데이터 정합성 문맥임을 벗어나지 않는다.',
     skills: ['Java', 'Spring Boot', 'Docker', 'Cubrid', 'Tibero'],
     keywords: ['ETL', '데이터 파이프라인', '공공 API', 'Spring Boot', 'Docker', 'PL'],
     period: '2023.07 - 2024.01',
     startDate: '2023-07',
     endDate: '2024-01',
     role: '백엔드 개발, PL',
+    countsAsCareerPeriod: true,
   },
   {
     id: 'project.care-service-platform',
@@ -165,42 +221,436 @@ export const publicCareer: PublicCareerItem[] = [
     visibility: 'archive',
     sourceType: 'public_detail',
     category: 'public-sector-web',
+    kind: '공공 포털 풀스택 개발과 레거시 개선',
     summary:
       '여성가족부 아이돌봄 포털의 사용자 포털과 내부 업무 시스템을 풀스택으로 개발하고 레거시 개선을 수행했습니다.',
     details: [
       '사용자 포털과 내부 업무 시스템의 풀스택 개발을 담당했습니다.',
       '레거시 시스템을 분석하고 일부 기능을 리팩토링했습니다.',
-      'DB 트리거와 저장 프로시저를 애플리케이션 레이어로 이전했습니다.',
+      '팀원 4명과 함께 DB 트리거와 저장 프로시저를 제거하고 애플리케이션 레이어로 로직을 이전했습니다.',
+      '변경 추적 어려움, 디버깅 난이도 상승, DB 부하 증가 등 레거시 구조 문제를 개선했습니다.',
+      'LCP를 23초에서 실 사용 가능한 수준으로 단축했습니다.',
+      'TBT를 최대 1100ms에서 20ms 이내로 안정화했습니다.',
+      '무한 뎁스 다중 팝업 구조를 단일 팝업으로 통합해 무한 뎁스를 제거했습니다.',
       '사용자 동선을 재설계해 최대 7회 클릭이 필요하던 흐름을 4회로 줄였습니다.',
-      '담당 페이지 응답시간 3초 이내 달성을 목표로 성능을 관리했습니다.',
     ],
+    agentContext:
+      '레거시 개선 질문에서는 DB 트리거·프로시저 제거, 애플리케이션 레이어 이전, LCP 23초 개선, TBT 1100ms에서 20ms 이내 안정화, 무한 뎁스 팝업 제거, 클릭 수 7회에서 4회 감소를 근거로 답한다. 팀 단위 작업은 개인 단독 성과처럼 말하지 않는다.',
     skills: ['Java', 'Spring Boot', 'Thymeleaf', 'Bootstrap', 'Tibero', 'Sass'],
     keywords: ['레거시 개선', 'UI/UX 개선', 'Spring Boot', 'Thymeleaf', 'Tibero'],
     period: '2022.04 - 2023.06',
     startDate: '2022-04',
     endDate: '2023-06',
     role: '풀스택 개발',
+    countsAsCareerPeriod: true,
+  },
+  {
+    id: 'education.inu-computer-science',
+    title: '인천대학교 컴퓨터공학부',
+    visibility: 'supporting',
+    sourceType: 'resume',
+    category: 'education',
+    kind: '학력',
+    summary: '인천대학교 컴퓨터공학부에서 컴퓨터공학 학사 과정을 졸업했습니다.',
+    details: ['학사 졸업', '학점 3.74/4.5', '재학 기간은 2018.03부터 2022.02까지입니다.'],
+    agentContext:
+      '학력 질문에만 직접 근거로 사용한다. 경력 기간 계산에는 포함하지 않는다. 학점은 사용자가 학력이나 성적을 물을 때만 언급하고, 기술 역량의 직접 증거처럼 과장하지 않는다.',
+    skills: ['Computer Science'],
+    keywords: ['학력', '컴퓨터공학', '인천대학교', '학사', '졸업', '학점'],
+    period: '2018.03 - 2022.02',
+    startDate: '2018-03',
+    endDate: '2022-02',
+    role: '컴퓨터공학 학사',
+    countsAsCareerPeriod: false,
+  },
+  {
+    id: 'education.inu-gai-lab',
+    title: '인천대학교 컴퓨터공학부 GAI Lab 학부연구생',
+    visibility: 'supporting',
+    sourceType: 'resume',
+    category: 'education-research',
+    kind: '학부 연구 경험',
+    summary: '인천대학교 컴퓨터공학부 GAI Lab에서 학부연구생으로 활동했습니다.',
+    details: [
+      '활동 기간은 2019.08부터 2021.08까지입니다.',
+      '학부 과정 중 연구실 활동을 수행했습니다.',
+    ],
+    agentContext:
+      '연구 경험이나 학부 시절 활동 질문에 보조 근거로 사용한다. 구체 연구 주제, 논문, 담당 업무는 공개 데이터에 없으므로 임의로 만들지 않는다.',
+    skills: ['Research'],
+    keywords: ['학부연구생', 'GAI Lab', '연구실', '인천대학교', '컴퓨터공학'],
+    period: '2019.08 - 2021.08',
+    startDate: '2019-08',
+    endDate: '2021-08',
+    role: '학부연구생',
+    countsAsCareerPeriod: false,
+  },
+  {
+    id: 'education.inu-oracle-course',
+    title: '2018 INU 직무스쿨 오라클 기초과정 수료',
+    visibility: 'supporting',
+    sourceType: 'resume',
+    category: 'education-training',
+    kind: '교육 수료',
+    summary: '인천대학교 취업경력개발원의 2018 INU 직무스쿨 오라클 기초과정을 수료했습니다.',
+    details: ['교육 기간은 2018.07부터 2018.08까지입니다.', '오라클 기초과정 수료 이력입니다.'],
+    agentContext:
+      '교육 수료 질문에만 보조 근거로 사용한다. Oracle 실무 숙련도나 프로젝트 경험으로 과장하지 않는다.',
+    skills: ['Oracle'],
+    keywords: ['교육', '수료', '오라클', 'Oracle', 'INU 직무스쿨', '인천대학교 취업경력개발원'],
+    period: '2018.07 - 2018.08',
+    startDate: '2018-07',
+    endDate: '2018-08',
+    role: '교육 수료',
+    countsAsCareerPeriod: false,
+  },
+  {
+    id: 'achievement.patent-leak-monitoring-device',
+    title: '누수 모니터링 장치 및 동작 방법 특허 공동발명',
+    visibility: 'supporting',
+    sourceType: 'public_detail',
+    category: 'patent',
+    kind: '특허 공동발명',
+    sourceUrl: 'https://doi.org/10.8080/1020200149892',
+    sourceDescription: '공개 DOI 링크',
+    summary:
+      '수도 관망 내에서의 누수 여부를 모니터링하는 누수 모니터링 장치 및 그 동작 방법 특허의 공동발명 이력이 있습니다. 학부연구생 활동과 함께 연구실 연구 프로젝트 기반으로 제출/등록한 특허입니다.',
+    details: [
+      '특허번호 1024769410000',
+      '등록 또는 공개 기준 날짜는 2022.12입니다.',
+      '학부연구생 활동과 함께 연구실 연구 프로젝트 기반으로 제출/등록한 특허입니다.',
+    ],
+    agentContext:
+      '특허 관련 질문에 보조 근거로 사용한다. 공동발명 이력으로만 표현하고, 단독 발명이나 상용화 성과처럼 과장하지 않는다. 특허의 상세 청구항이나 기술 구현 내용은 공개 데이터 요약 범위를 넘어서 단정하지 않는다.',
+    keywords: ['특허', '공동발명', '누수 모니터링', '수도 관망', '디지털 수도'],
+    date: '2022-12',
+    role: '특허 공동발명자',
+    countsAsCareerPeriod: false,
+  },
+  {
+    id: 'achievement.patent-digital-water-meter-fault-detection',
+    title: '디지털 수도 계량기 고장 판단 특허 공동발명',
+    visibility: 'supporting',
+    sourceType: 'public_detail',
+    category: 'patent',
+    kind: '특허 공동발명',
+    sourceUrl: 'https://doi.org/10.8080/1020200026580',
+    sourceDescription: '공개 DOI 링크',
+    summary:
+      '계량 값 분석을 기초로 고장 여부의 판단이 가능한 디지털 수도 계량기 및 그 동작 방법 특허의 공동발명 이력이 있습니다. 학부연구생 활동과 함께 연구실 연구 프로젝트 기반으로 제출/등록한 특허입니다.',
+    details: [
+      '특허번호 1022338410000',
+      '등록 또는 공개 기준 날짜는 2021.03입니다.',
+      '학부연구생 활동과 함께 연구실 연구 프로젝트 기반으로 제출/등록한 특허입니다.',
+    ],
+    agentContext:
+      '특허 관련 질문에 보조 근거로 사용한다. 공동발명 이력으로만 표현하고, 단독 발명이나 상용화 성과처럼 과장하지 않는다. 특허의 상세 청구항이나 기술 구현 내용은 공개 데이터 요약 범위를 넘어서 단정하지 않는다.',
+    keywords: ['특허', '공동발명', '디지털 수도 계량기', '고장 판단', '계량 값 분석'],
+    date: '2021-03',
+    role: '특허 공동발명자',
+    countsAsCareerPeriod: false,
+  },
+  {
+    id: 'achievement.patent-leak-location-system',
+    title: '누수 위치 판단 시스템 특허 공동발명',
+    visibility: 'supporting',
+    sourceType: 'public_detail',
+    category: 'patent',
+    kind: '특허 공동발명',
+    sourceUrl: 'https://doi.org/10.8080/1020200130020',
+    sourceDescription: '공개 DOI 링크',
+    summary:
+      '수도 관망 내에서 누수 위치의 판단이 가능한 누수 위치 판단 시스템 장치 및 그 동작 방법 특허의 공동발명 이력이 있습니다. 학부연구생 활동과 함께 연구실 연구 프로젝트 기반으로 제출/등록한 특허입니다.',
+    details: [
+      '특허번호 1022200470000',
+      '등록 또는 공개 기준 날짜는 2021.02입니다.',
+      '학부연구생 활동과 함께 연구실 연구 프로젝트 기반으로 제출/등록한 특허입니다.',
+    ],
+    agentContext:
+      '특허 관련 질문에 보조 근거로 사용한다. 공동발명 이력으로만 표현하고, 단독 발명이나 상용화 성과처럼 과장하지 않는다. 특허의 상세 청구항이나 기술 구현 내용은 공개 데이터 요약 범위를 넘어서 단정하지 않는다.',
+    keywords: ['특허', '공동발명', '누수 위치 판단', '수도 관망', '모니터링'],
+    date: '2021-02',
+    role: '특허 공동발명자',
+    countsAsCareerPeriod: false,
+  },
+  {
+    id: 'achievement.inu-smart-living-lab-hackathon',
+    title: '2020 인천대학교 스마트 리빙랩 해커톤 사운드 분야 동상',
+    visibility: 'supporting',
+    sourceType: 'resume',
+    category: 'award',
+    kind: '해커톤 수상',
+    summary: '2020년 인천대학교 스마트 리빙랩 해커톤에서 사운드 분야 동상을 수상했습니다.',
+    details: [
+      '수상 시점은 2020.02입니다.',
+      '수상 분야는 사운드 분야입니다.',
+      '해당 해커톤은 AI를 이용한 소리 분류기 모델 학습을 주제로 진행되었습니다.',
+    ],
+    agentContext:
+      '수상 이력 질문에 보조 근거로 사용한다. 구체 팀 구성, 개발 산출물, 사용 기술은 공개 데이터에 없으므로 임의로 만들지 않는다.',
+    keywords: ['해커톤', '수상', '동상', '스마트 리빙랩', '사운드', '인천대학교'],
+    date: '2020-02',
+    role: '해커톤 수상자',
+    countsAsCareerPeriod: false,
   },
   {
     id: 'project.resume-tailwind',
-    title: '개인 이력서 웹사이트',
+    title: '개인 이력서 웹사이트와 AI Q&A',
     visibility: 'supporting',
     sourceType: 'public_detail',
     category: 'personal-project',
+    kind: '개인 이력서 웹사이트와 AI 챗봇',
+    sourceUrl: 'https://github.com/mental-disaster/resume',
+    sourceDescription: 'GitHub 공개 저장소',
     summary:
-      'Next.js와 Tailwind CSS를 사용해 개인 이력서 웹사이트를 구현하고 Vercel 자동 배포 환경을 구성했습니다.',
+      'Next.js와 Tailwind CSS를 사용해 개인 이력서 웹사이트를 구현하고, 공개 이력 데이터 기반 Q&A 챗봇을 추가했습니다.',
     details: [
       'Next.js App Router와 Tailwind CSS 기반의 정적 이력서 웹사이트를 개발했습니다.',
       '경력, 기술스택, 프로젝트 정보를 한눈에 볼 수 있도록 구성했습니다.',
       'Vercel 플랫폼에 배포해 Git 커밋 시 자동 배포되도록 구성했습니다.',
-      '반응형 디자인을 적용해 다양한 디바이스에서 가독성과 UI를 조정했습니다.',
+      'Gemini API, Redis rate limit, server-only 공개 이력 데이터, sessionStorage 기반 채팅 캐시를 활용한 Q&A 기능을 구현 했습니다.',
+      '모델 출력은 structured output으로 받고, 서버에서 sourceIds 검증, 답변 길이 제한, leak pattern 후검증을 수행합니다.',
     ],
-    skills: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Vercel'],
-    keywords: ['Next.js', 'Tailwind CSS', 'Vercel', '반응형', '개인 프로젝트'],
-    period: '2025.06',
+    agentContext:
+      '개인 사이트 개선 프로젝트로 설명한다. Gemini API와 Redis를 활용한 AI Q&A 기능은 공개 이력 데이터만 근거로 답변하도록 설계한 실험적 기능이며, 아직 검증·운영 안정화 중인 기능으로 과장하지 않는다.',
+    skills: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Vercel', 'Gemini API', 'Redis'],
+    keywords: [
+      'Next.js',
+      'Tailwind CSS',
+      'Vercel',
+      '반응형',
+      '개인 프로젝트',
+      'AI Q&A',
+      'Gemini',
+      'Redis',
+    ],
+    period: '2025.06 - 현재',
     startDate: '2025-06',
-    endDate: '2025-06',
+    endDate: null,
     role: '개인 프로젝트 개발',
+    countsAsCareerPeriod: false,
+  },
+  {
+    id: 'project.game-calendar-server',
+    title: '게임 출시 캘린더 서버',
+    visibility: 'supporting',
+    sourceType: 'public_detail',
+    category: 'personal-backend-data-pipeline',
+    kind: '개인 백엔드와 데이터 파이프라인 프로젝트',
+    sourceUrl: 'https://github.com/mental-disaster/game-calendar-server',
+    sourceDescription: 'GitHub 공개 저장소',
+    summary:
+      'Kotlin과 Spring Boot로 게임 출시 일정을 제공하는 서버를 만들며, 외부 게임 데이터 수집, ETL, 서비스 API, 마이그레이션, 테스트 구조를 함께 구성했습니다.',
+    details: [
+      'Java 21, Kotlin 1.9, Spring Boot 3.5, PostgreSQL 17, Flyway 기반으로 서버를 구성했습니다.',
+      'IGDB/Twitch API 연동을 위한 client, batch job, ingest entity, service projection 계층을 분리했습니다.',
+      'GET /api/releases와 GET /api/games/{gameId} 형태의 출시 일정·게임 상세 API를 설계했습니다.',
+      '출시 일정 조회에서 날짜 범위, 단일 날짜, 플랫폼 그룹 필터를 지원하도록 API 범위를 정리했습니다.',
+      'batch와 calendar 모듈이 서로 의존하지 않도록 ArchUnit 테스트를 두고, Testcontainers 기반 PostgreSQL 통합 테스트를 포함했습니다.',
+      'Flyway 마이그레이션으로 ingest/service 스키마와 인덱스 변경을 관리했습니다.',
+    ],
+    agentContext:
+      '개인 프로젝트이므로 회사 실무 프로젝트처럼 말하지 않는다. 다만 백엔드 설계 성향, 데이터 수집/정제/제공 흐름, 모듈 경계 관리, 테스트 전략, 향후 MSA 전환을 고려한 구조를 설명할 때 좋은 근거로 활용한다.',
+    skills: [
+      'Kotlin',
+      'Java 21',
+      'Spring Boot',
+      'PostgreSQL',
+      'Flyway',
+      'JPA',
+      'Testcontainers',
+      'ArchUnit',
+      'Gradle',
+    ],
+    keywords: [
+      '개인 백엔드',
+      '게임 출시 캘린더',
+      'ETL',
+      'IGDB',
+      'Twitch API',
+      'Flyway',
+      'PostgreSQL',
+      '통합 테스트',
+      '모듈 경계',
+    ],
+    period: '2026.06',
+    startDate: '2026-06',
+    endDate: null,
+    role: '개인 프로젝트 개발',
+    countsAsCareerPeriod: false,
+  },
+  {
+    id: 'project.extension-policy-manager',
+    title: '파일 확장자 차단 정책 관리 미니 서비스',
+    visibility: 'supporting',
+    sourceType: 'public_detail',
+    category: 'personal-fullstack-mini-service',
+    kind: '작은 풀스택 CRUD 서비스',
+    sourceUrl: 'https://github.com/mental-disaster/extension-manager-backend',
+    sourceDescription:
+      'GitHub 공개 저장소. 백엔드 저장소와 프론트엔드 저장소(https://github.com/mental-disaster/extension-manager-frontend)가 분리되어 있습니다.',
+    summary:
+      '파일 확장자 차단 정책을 관리하는 미니 서비스로, Kotlin Spring Boot 백엔드와 React/Vite 프론트엔드를 분리해 구현했습니다.',
+    details: [
+      '백엔드는 Java 21, Kotlin, Spring Boot 3.5, SQLite, Flyway, Swagger 기반으로 구성했습니다.',
+      '고정 확장자 차단 여부 변경, 커스텀 확장자 추가·삭제, 최대 200개 제한, 중복 방지, 입력 정규화 흐름을 구현했습니다.',
+      'Controller, Service, Repository, DTO, 전역 예외 처리, 테스트 코드를 분리했습니다.',
+      '프론트엔드는 React 19, Vite 7, TypeScript, Tailwind CSS로 구현하고 로딩, 에러, 생성·수정·삭제 상태를 UI에 반영했습니다.',
+    ],
+    agentContext:
+      '대형 프로젝트처럼 과장하지 말고, 작은 기능을 백엔드와 프론트로 나누어 완성한 풀스택 미니 프로젝트로 설명한다. 입력 검증, 중복 방지, 제한 처리, CRUD API, UI 상태 관리 경험을 보여주는 근거로 사용한다.',
+    skills: [
+      'Kotlin',
+      'Spring Boot',
+      'SQLite',
+      'Flyway',
+      'Swagger',
+      'React',
+      'Vite',
+      'TypeScript',
+      'Tailwind CSS',
+    ],
+    keywords: [
+      '파일 확장자 차단',
+      'CRUD',
+      '입력 정규화',
+      '중복 방지',
+      '풀스택',
+      '미니 서비스',
+      'React',
+      'Kotlin',
+    ],
+    period: '2025.11',
+    startDate: '2025-11',
+    endDate: '2025-11',
+    role: '개인 풀스택 프로젝트 개발',
+    countsAsCareerPeriod: false,
+  },
+  {
+    id: 'automation.auto-reloader',
+    title: 'SR 자동 새로고침 및 알림 Chrome 확장',
+    visibility: 'supporting',
+    sourceType: 'public_detail',
+    category: 'work-automation',
+    kind: '업무 자동화와 Chrome 확장',
+    sourceUrl: 'https://github.com/mental-disaster/auto-reloader',
+    sourceDescription: '내부 URL과 일부 코드를 마스킹한 GitHub 공개 저장소',
+    summary:
+      '업무 중 SR 페이지를 수동으로 새로고침하고 확인해야 하는 불편을 줄이기 위해 신규 SR 감지와 알림을 제공하는 Chrome 확장을 만들었습니다.',
+    details: [
+      'SR 페이지의 form 기반 요청을 주기적으로 보내고 DOMParser로 응답 HTML을 파싱했습니다.',
+      '기존 목록과 새 응답의 데이터 수·행 정보를 비교해 신규 SR을 감지했습니다.',
+      'Chrome notifications, offscreen document, alarms를 사용해 리스트 화면을 켜두지 않아도 알림을 받을 수 있게 했습니다.',
+      '내부망·타 업체 관리 페이지·API 추출 불가 같은 제약 때문에 브라우저 확장 방식으로 우회했습니다.',
+      '코드는 공개 저장소에서 내부 URL과 일부 정보를 마스킹한 상태입니다.',
+    ],
+    agentContext:
+      '청렴포털 운영 경험과 연결되는 업무 자동화 사례다. 공식 서비스 기능이 아니라 개인이 불편한 반복 작업을 줄이기 위해 만든 보조 도구로 설명한다. 내부망 URL, 개인 연락처, 실제 SR 내용, 고객사 세부 정보는 공개 데이터에 없으므로 말하지 않는다.',
+    skills: ['JavaScript', 'Chrome Extension', 'DOMParser', 'XMLHttpRequest', 'Notifications API'],
+    keywords: [
+      '업무 자동화',
+      'SR 자동 알림',
+      'Chrome 확장',
+      'DOM 파싱',
+      '운영 효율',
+      '반복 작업 개선',
+    ],
+    period: '2025.08 공개 저장소 기준',
+    date: '2025-08-12',
+    role: '업무 자동화 도구 개발',
+    countsAsCareerPeriod: false,
+  },
+  {
+    id: 'hobby.indie-game-unicode-path-debugging',
+    title: '인디게임 실행 오류 원인 추적과 개발자 피드백',
+    visibility: 'supporting',
+    sourceType: 'owner_provided',
+    category: 'hobby-debugging',
+    kind: '취미 영역의 디버깅 협업',
+    summary:
+      '구매한 인디게임 실행 오류를 개발자와 메일로 주고받으며 재현 조건을 좁히고, Windows 사용자명 Unicode 경로 문제가 원인일 가능성을 찾아 전달한 경험입니다.',
+    details: [
+      'Steam 실행, 직접 실행, 무결성 검사, 그래픽 드라이버 업데이트, 호환성 모드, 관리자 권한 실행 등 기본 재현·검증 절차를 먼저 확인했습니다.',
+      '게임 실행 전후 파일 수와 저장 경로를 비교하면서 파일 누락이나 저장 실패 가능성을 점검했습니다.',
+      '새 Windows 사용자 계정을 영문 경로로 만들어 동일 게임을 설치·실행해 Unicode 사용자명 경로가 문제일 가능성을 좁혔습니다.',
+      '유사한 Windows 경로 인코딩 문제 사례를 찾아 개발자에게 전달했고, 이후 개발자가 관련 수정 빌드를 안내했습니다.',
+    ],
+    agentContext:
+      '공식 업무 경험이나 오픈소스 기여처럼 말하지 말고, 취미 중에도 문제를 재현하고 가설을 세워 개발자에게 피드백한 디버깅 사례로 설명한다. 게임명, 개인 이메일, 개발자 이메일, 메일 원문, 계정명, 실제 사용자 경로 원문은 답변하지 않는다. Unicode 경로, Windows 사용자명, 재현 조건 정리, 비동기 커뮤니케이션을 중심으로 설명한다.',
+    skills: [
+      'Windows',
+      'Steam',
+      'Debugging',
+      'Unicode Path',
+      'Reproduction',
+      'Technical Communication',
+    ],
+    keywords: [
+      '취미 디버깅',
+      '인디게임',
+      'Unicode 경로',
+      'Windows 사용자명',
+      '재현 조건',
+      '개발자 피드백',
+      '비동기 커뮤니케이션',
+    ],
+    role: '사용자 디버깅 피드백',
+    countsAsCareerPeriod: false,
+  },
+  {
+    id: 'hobby.rpg-maker-local-data-fix',
+    title: 'RPG Maker 게임 크래시 원인 분석과 로컬 데이터 보정',
+    visibility: 'supporting',
+    sourceType: 'owner_provided',
+    category: 'hobby-debugging',
+    kind: '취미 영역의 런타임 오류 분석',
+    summary:
+      'RPG Maker 기반 게임에서 한글판 특정 데이터 누락으로 크래시가 발생하는 상황을 확인하고, 원본 데이터를 참고해 누락 데이터를 직접 보정해 플레이 가능한 상태로 만든 경험입니다.',
+    details: [
+      '게임 진행 중 발생한 크래시를 단순 실행 오류로 보지 않고, 특정 지점에서 반복되는 데이터 누락 문제로 좁혔습니다.',
+      '한글판 데이터와 원본 데이터를 비교해 누락된 항목을 확인했습니다.',
+      '원본 데이터를 참고해 필요한 내용을 직접 번역하고 누락된 데이터를 채워 로컬 환경에서 오류를 해소했습니다.',
+      '배포나 우회 목적이 아니라 구매한 게임을 개인적으로 정상 플레이하기 위한 로컬 보정 경험입니다.',
+    ],
+    agentContext:
+      '취미 기반 문제 해결 사례로만 설명한다. 게임 파일 수정이나 데이터 확인을 저작권 우회, 치트, 재배포, 서비스 악용처럼 표현하지 않는다. 핵심은 크래시 재현, 데이터 구조 비교, 누락 원인 파악, 로컬 보정이다. 게임명, 원본 데이터 전문, 수정 파일 내용은 공개 데이터에 없으므로 말하지 않는다.',
+    skills: ['RPG Maker', 'Debugging', 'Data Comparison', 'Localization', 'Root Cause Analysis'],
+    keywords: [
+      'RPG Maker',
+      '크래시 분석',
+      '데이터 누락',
+      '한글화',
+      '로컬 보정',
+      '원인 분석',
+      '취미 디버깅',
+    ],
+    role: '개인 취미 디버깅',
+    countsAsCareerPeriod: false,
+  },
+  {
+    id: 'oss.burn-baby-burn-terminal-animation-fix',
+    title: 'burn-baby-burn 터미널 애니메이션 호환성 수정',
+    visibility: 'supporting',
+    sourceType: 'public_detail',
+    category: 'open-source-contribution',
+    kind: '작은 오픈소스 기여',
+    sourceUrl: 'https://github.com/dtnewman/burn-baby-burn/pull/3',
+    sourceDescription: 'GitHub에 병합된 공개 PR',
+    summary:
+      '오픈소스 CLI 프로젝트에서 macOS zsh 및 oh-my-zsh 환경의 터미널 애니메이션 redraw 깨짐 문제를 재현하고 cursor save/restore 방식을 tput 기반으로 수정한 PR이 병합되었습니다.',
+    details: [
+      'macOS zsh 및 oh-my-zsh 환경에서 터미널 애니메이션 출력이 깨지는 현상을 PR 본문에 재현 사례와 함께 정리했습니다.',
+      'cursor save/restore 구현을 printf escape sequence 기반 처리에서 tput 기반 처리로 변경했습니다.',
+      '작은 범위의 오픈소스 버그 수정 기여이며, 프로젝트 전체를 주도한 경험으로 과장하지 않습니다.',
+    ],
+    agentContext:
+      '오픈소스 기여 질문에서는 소규모 버그 수정 PR 1건이 병합된 경험으로 표현한다. 대표 프로젝트나 장기 오픈소스 활동처럼 과장하지 말고, 문제 재현, 작은 수정, maintainer와의 비동기 협업 사례로 설명한다.',
+    skills: ['Shell', 'Terminal', 'tput', 'zsh', 'GitHub'],
+    keywords: ['오픈소스', 'PR', '터미널', '디버깅', 'CLI', 'zsh', 'tput'],
+    period: '2026.05',
+    date: '2026-05-21',
+    role: '오픈소스 기여자',
+    countsAsCareerPeriod: false,
   },
 ];
 

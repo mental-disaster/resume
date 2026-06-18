@@ -49,8 +49,7 @@ const isResumeQaModelOutput = (value: unknown): value is ResumeQaModelOutput => 
     isResumeQaQuestionScope(value.questionScope) &&
     typeof value.answerable === 'boolean' &&
     typeof value.answer === 'string' &&
-    isStringArray(value.sourceIds) &&
-    isStringArray(value.suggestedQuestions)
+    isStringArray(value.sourceIds)
   );
 };
 
