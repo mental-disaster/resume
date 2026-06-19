@@ -17,7 +17,7 @@ export interface ContactInfo {
 export const contactData: ContactInfo = {
   email: {
     label: '이메일',
-    value: 'dummy618234@gmail.com',
+    value: 'resume@work.imgh.dev',
   },
   social: [
     {
