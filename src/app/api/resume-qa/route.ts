@@ -1,3 +1,4 @@
+import { checkBotId } from 'botid/server';
 import { NextRequest, NextResponse } from 'next/server';
 
 import {
@@ -17,6 +18,7 @@ import {
 import { hasBlockedTextPattern } from '@/server/resume-qa/policyPatterns';
 import { ResumeQaProviderConfigError, ResumeQaProviderError } from '@/server/resume-qa/provider';
 import { checkResumeQaRateLimit } from '@/server/resume-qa/rateLimit';
+import { withTimeout } from '@/server/resume-qa/withTimeout';
 
 export const runtime = 'nodejs';
 
@@ -33,6 +35,7 @@ type RequestValidationResult =
 const JSON_CONTENT_TYPE = 'application/json';
 const MAX_CONVERSATION_MESSAGES = 8;
 const MAX_CONVERSATION_MESSAGE_LENGTH = 1200;
+const BOT_CHECK_TIMEOUT_MS = 2_000;
 const BRIEF_CONVERSATIONAL_PATTERNS = {
   greeting: /^(?:안녕|안녕하세요|하이|헬로|hi|hello|hey)$/,
   thanks: /^(?:고마워|고마워요|감사|감사합니다|ㄱㅅ|thanks|thankyou|thx)$/,
@@ -183,12 +186,21 @@ const createConfigErrorResponse = () =>
   createErrorResponse(503, 'provider_unavailable', 'AI 답변 생성 설정이 아직 완료되지 않았습니다.');
 
 const logResumeQaError = (message: string, reason?: unknown) => {
-  if (process.env.NODE_ENV === 'production') return;
-
   console.error('[resume-qa]', message, reason instanceof Error ? reason.message : reason);
 };
 
 export async function POST(request: NextRequest) {
+  // checkBotId throws without an OIDC token and its fetch has no timeout — fail open.
+  try {
+    const { isBot } = await withTimeout(checkBotId(), BOT_CHECK_TIMEOUT_MS, 'bot check');
+
+    if (isBot) {
+      return createErrorResponse(403, 'bot_detected', '요청을 처리할 수 없습니다.');
+    }
+  } catch (error) {
+    logResumeQaError('bot check unavailable', error);
+  }
+
   if (!isJsonContentType(request.headers.get('content-type'))) {
     return createErrorResponse(
       415,
@@ -254,16 +266,6 @@ export async function POST(request: NextRequest) {
   }
 
   const rateLimitResult = await checkResumeQaRateLimit(request);
-
-  if (rateLimitResult.status === 'unavailable') {
-    logResumeQaError('rate limit unavailable', rateLimitResult.reason);
-
-    return createErrorResponse(
-      503,
-      'rate_limit_unavailable',
-      '질문 가능 횟수를 확인할 수 없습니다. 잠시 후 다시 시도해 주세요.'
-    );
-  }
 
   if (rateLimitResult.status === 'limited') {
     if (rateLimitResult.scope === 'global_day') {

@@ -49,8 +49,8 @@ export type ResumeQaErrorCode =
   | 'invalid_content_type'
   | 'invalid_json'
   | 'invalid_request'
+  | 'bot_detected'
   | 'rate_limited'
-  | 'rate_limit_unavailable'
   | 'daily_limit_exceeded'
   | 'provider_unavailable'
   | 'internal_error';
